@@ -1,0 +1,25 @@
+# Credentials and local settings
+**/.env
+**/.env.*
+!**/.env.example
+
+# Python / Django local files
+**/.venv/
+**/venv/
+**/__pycache__/
+**/*.py[cod]
+**/db.sqlite3
+**/media/
+**/staticfiles/
+
+# Tooling and operating system files
+**/.DS_Store
+**/.vercel/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/coverage.xml
+**/.coverage
+
+# Keep only the static preview in GitHub Pages output.
+/ottavio/
