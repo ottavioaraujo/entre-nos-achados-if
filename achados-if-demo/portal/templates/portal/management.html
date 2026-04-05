@@ -1,0 +1,30 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Painel de gestão — Entre Nós</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  {% include 'portal/_theme_init.html' %}
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'portal/site.css' %}">
+</head>
+<body class="management-body">
+  <div class="topline">Acesso restrito · Gestão de achados do campus</div>
+  <header class="header"><div class="header-main"><div class="campus-label">Painel administrativo<br>{{ request.user.get_full_name|default:request.user.username }}</div><a class="logo" href="{% url 'portal:management' %}">ENTRE NÓS<small>GESTÃO DO CAMPUS</small></a><div class="header-actions">{% include 'portal/_theme_switcher.html' %}<a class="button outline" href="{% url 'portal:board' %}">Ver mural público</a><form method="post" action="{% url 'portal:sign_out' %}">{% csrf_token %}<button class="button" type="submit">Sair</button></form></div></div><nav class="nav"><a href="#resumo">Resumo</a><a href="#avisos">Gerenciar avisos</a><a href="{% url 'portal:account' %}">Minha área</a></nav></header>
+  <main class="wrap management-page">
+    {% if messages %}<div class="messages">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
+    <section class="management-intro" id="resumo"><div><span class="eyebrow">Visão geral</span><h1>Painel de gestão</h1><p>Revise, atualize e acompanhe os registros da comunidade.</p></div><a class="button" href="{% url 'portal:board' %}">Abrir mural público ↗</a></section>
+    <section class="metric-grid"><article class="metric-card"><span>Total de avisos</span><strong>{{ totals.total }}</strong></article><article class="metric-card"><span>Itens perdidos</span><strong>{{ totals.lost }}</strong></article><article class="metric-card"><span>Itens encontrados</span><strong>{{ totals.found }}</strong></article><article class="metric-card"><span>Resolvidos</span><strong>{{ totals.resolved }}</strong></article></section>
+    <section class="management-list" id="avisos"><div class="section-heading"><div><span class="eyebrow">Moderação e acompanhamento</span><h2>Registros do campus</h2></div></div>
+      <form class="management-filters" method="get" action="{% url 'portal:management' %}"><input class="search" type="search" name="q" value="{{ query }}" placeholder="Buscar item, local ou contato…" aria-label="Buscar avisos"><select class="select" name="status"><option value="active" {% if status_filter == 'active' %}selected{% endif %}>Ativos</option><option value="resolved" {% if status_filter == 'resolved' %}selected{% endif %}>Resolvidos</option><option value="all" {% if status_filter == 'all' %}selected{% endif %}>Todos</option></select><select class="select" name="tipo"><option value="all" {% if kind_filter == 'all' %}selected{% endif %}>Todos os tipos</option><option value="lost" {% if kind_filter == 'lost' %}selected{% endif %}>Perdidos</option><option value="found" {% if kind_filter == 'found' %}selected{% endif %}>Encontrados</option></select><button class="filter-button active" type="submit">Filtrar</button></form>
+      <div class="table-wrap"><table class="management-table"><thead><tr><th>Item</th><th>Tipo</th><th>Local e data</th><th>Publicado por</th><th>Contato</th><th>Status</th><th>Ações</th></tr></thead><tbody>
+        {% for item in items %}<tr><td class="manage-item">{% if item.photo %}<img class="manage-thumb" src="{{ item.photo.url }}" alt="">{% endif %}<div><strong>{{ item.name }}</strong><small>{{ item.get_category_display }}</small></div></td><td><span class="manage-pill {{ item.kind }}">{{ item.get_kind_display }}</span></td><td>{{ item.location }}<small>{{ item.event_date|date:"d/m/Y" }}</small></td><td>{% if item.reporter %}{{ item.reporter.get_full_name|default:item.reporter.username }}{% else %}Comunidade{% endif %}</td><td>{{ item.contact_phone }}<small><a href="{{ item.whatsapp_url }}" target="_blank" rel="noopener noreferrer">Abrir WhatsApp ↗</a></small></td><td><span class="manage-pill {% if item.is_resolved %}resolved{% else %}active{% endif %}">{% if item.is_resolved %}Resolvido{% else %}Ativo{% endif %}</span></td><td><div class="manage-actions"><a class="small-action" href="{% url 'portal:edit_item' item.pk %}">Editar</a><form method="post" action="{% url 'portal:toggle_resolution' item.pk %}">{% csrf_token %}<button class="small-action" type="submit">{% if item.is_resolved %}Reabrir{% else %}Resolver{% endif %}</button></form><form method="post" action="{% url 'portal:delete_item' item.pk %}" onsubmit="return confirm('Excluir este aviso do mural?')">{% csrf_token %}<button class="small-action danger" type="submit">Excluir</button></form></div></td></tr>
+        {% empty %}<tr><td colspan="7" class="table-empty">Nenhum aviso corresponde a estes filtros.</td></tr>{% endfor %}
+      </tbody></table></div>
+    </section>
+  </main>
+  <footer class="footer"><div class="footer-inner"><div><a class="footer-logo" href="{% url 'portal:management' %}">ENTRE NÓS</a><p>Painel de gestão de achados e perdidos do campus.</p></div><div class="footer-links"><a href="{% url 'portal:board' %}">Mural público</a><a href="#avisos">Voltar aos registros ↑</a></div></div></footer>
+</body>
+</html>

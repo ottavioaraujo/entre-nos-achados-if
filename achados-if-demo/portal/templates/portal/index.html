@@ -1,0 +1,53 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f6f2">
+  <title>Entre Nós — Achados e Perdidos do Campus</title>
+  <meta name="description" content="Uma comunidade para ajudar objetos perdidos e encontrados a voltar para casa.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  {% include 'portal/_theme_init.html' %}
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'portal/site.css' %}">
+</head>
+<body class="landing-body">
+  <div class="topline">Campus em comunidade · Ajude a encontrar · Devolva o que encontrou</div>
+  <header class="header">
+    <div class="header-main">
+      <div class="campus-label">Achados e perdidos<br>Comunidade do IF</div>
+      <a class="logo" href="{% url 'portal:index' %}">ENTRE NÓS<small>ACHADOS DO CAMPUS</small></a>
+      <div class="header-actions">{% include 'portal/_theme_switcher.html' %}
+        {% if request.user.is_staff %}<a class="button" href="{% url 'portal:management' %}">Painel de gestão</a>
+        {% elif request.user.is_authenticated %}<a class="button" href="{% url 'portal:account' %}">Minha área</a>
+        {% elif demo_login_enabled %}<a class="button outline" href="{% url 'portal:demo_login' %}">Acesso de teste</a>
+        {% else %}<a class="button outline" href="{% url 'portal:suap_login' %}">Entrar com SUAP</a>{% endif %}
+      </div>
+    </div>
+    <nav class="nav" aria-label="Navegação principal"><a href="{% url 'portal:index' %}">Início</a><a href="{% url 'portal:board' %}">Ver itens</a><a href="#como-funciona">Como funciona</a><button class="nav-action" type="button" data-open-item-modal data-kind="lost">Cadastrar item</button></nav>
+  </header>
+  <main>
+    {% if messages %}<div class="messages wrap">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
+    <section class="landing-hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <span class="eyebrow">Um campus, muitas histórias</span>
+        <h1 id="hero-title">O que se perde<br>pode <em>voltar para casa.</em></h1>
+        <p>Perdeu ou encontrou alguma coisa no campus? Consulte os avisos ou publique um registro para ajudar a encontrar seu dono.</p>
+        <div class="hero-actions"><a class="button hero-primary" href="{% url 'portal:board' %}">Ver itens do campus <span aria-hidden="true">→</span></a><button class="button hero-register" type="button" data-open-item-modal data-kind="lost">Cadastrar item perdido ou encontrado <span aria-hidden="true">↗</span></button></div>
+        <div class="hero-note"><span class="note-mark" aria-hidden="true">✳</span><span>Uma rede feita por quem vive o campus.</span></div>
+      </div>
+      <div class="hero-art"><img class="hero-campus-photo" src="{% static 'portal/demo-items/campus-principal.jpg' %}" alt="Pessoas da comunidade do IF mostrando um objeto no campus" fetchpriority="high"><div class="hero-photo-shade" aria-hidden="true"></div><div class="hero-photo-caption"><span>COMUNIDADE DO IF</span><strong>Um ajuda o outro a encontrar.</strong></div></div>
+    </section>
+    <section class="landing-stats wrap" aria-label="Resumo do mural">
+      <div class="stats-intro"><span class="eyebrow">Mural da comunidade</span><strong>Pequenos encontros<br>fazem diferença.</strong></div>
+      <div class="stat"><strong>{{ totals.total }}</strong><span>avisos ativos</span></div><div class="stat"><strong>{{ totals.lost }}</strong><span>itens perdidos</span></div><div class="stat"><strong>{{ totals.found }}</strong><span>itens encontrados</span></div>
+      <a class="stat-link" href="{% url 'portal:board' %}">Explorar o mural <span aria-hidden="true">↓</span></a>
+    </section>
+    <section class="landing-cta wrap"><div class="cta-symbol" aria-hidden="true">↗</div><div><span class="eyebrow">Publique sem criar conta</span><h2>Perdeu ou encontrou alguma coisa?</h2><p>Informe os detalhes e um contato para combinar a devolução.</p></div><div class="cta-actions"><button class="button" type="button" data-open-item-modal data-kind="lost">Perdi algo</button><button class="button outline" type="button" data-open-item-modal data-kind="found">Encontrei algo</button></div></section>
+    <section class="how landing-how" id="como-funciona"><div class="wrap"><div class="how-head"><span class="eyebrow">Simples e colaborativo</span><h2>Um caminho curto<br>de volta para casa.</h2></div><div class="steps"><article class="step"><b>01</b><h3>Consulte o mural</h3><p>Filtre os registros por tipo, categoria, nome ou local.</p></article><article class="step"><b>02</b><h3>Publique sem conta</h3><p>Cadastre um item perdido ou encontrado com foto e WhatsApp.</p></article><article class="step"><b>03</b><h3>Combine a devolução</h3><p>Converse pelo WhatsApp e confirme os detalhes do item.</p></article></div></div></section>
+  </main>
+  <footer class="footer"><div class="footer-inner"><div><a class="footer-logo" href="{% url 'portal:index' %}">ENTRE NÓS</a><p>Uma iniciativa para aproximar pessoas e objetos no campus.</p></div><div class="footer-links"><a href="{% url 'portal:board' %}">Explorar o mural</a><a href="#como-funciona">Como funciona</a>{% if demo_login_enabled %}<a href="{% url 'portal:demo_login' %}">Acesso de teste</a>{% endif %}</div></div></footer>
+  {% include 'portal/_item_form_modal.html' %}
+</body>
+</html>

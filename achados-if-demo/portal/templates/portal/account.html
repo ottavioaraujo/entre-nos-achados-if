@@ -1,0 +1,26 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Minha área — Entre Nós</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  {% include 'portal/_theme_init.html' %}
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'portal/site.css' %}">
+</head>
+<body>
+  <div class="topline">Área autenticada · Entre Nós</div>
+  <header class="header"><div class="header-main"><div class="campus-label">{% if demo_login_enabled %}Conta de demonstração{% else %}Conta institucional{% endif %}<br>{{ request.user.get_full_name|default:request.user.username }}</div><a class="logo" href="{% url 'portal:index' %}">ENTRE NÓS<small>ACHADOS DO CAMPUS</small></a><div class="header-actions">{% include 'portal/_theme_switcher.html' %}{% if request.user.is_staff %}<a class="button" href="{% url 'portal:management' %}">Painel de gestão</a>{% endif %}<form method="post" action="{% url 'portal:sign_out' %}">{% csrf_token %}<button class="button outline" type="submit">Sair</button></form></div></div><nav class="nav"><a href="{% url 'portal:index' %}">Início</a><a href="{% url 'portal:board' %}">Mural público</a><button class="nav-action" type="button" data-open-item-modal data-kind="lost">Cadastrar item</button><a href="#meus-itens">Meus avisos</a></nav></header>
+  <main class="wrap account-page">
+    {% if messages %}<div class="messages">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
+    <section class="account-intro"><div><span class="eyebrow">{% if demo_login_enabled %}Sessão de demonstração ativa{% else %}Sessão SUAP ativa{% endif %}</span><h1>Olá, {{ request.user.first_name|default:request.user.username }}.</h1><p>Acompanhe seus avisos e publique um item perdido ou encontrado pelo formulário rápido.</p></div><button class="button" type="button" data-open-item-modal data-kind="lost">Cadastrar item</button></section>
+    <section class="account-note"><span class="eyebrow">Privacidade</span><h2>Compartilhe só o necessário.</h2><p>Seu contato fica visível no aviso público para facilitar a devolução. Não inclua senhas, documentos ou endereço residencial na descrição.</p></section>
+    <section class="my-items" id="meus-itens"><div class="section-heading"><div><span class="eyebrow">Sua atividade</span><h2>Meus avisos</h2><p>Acompanhe os itens cadastrados com sua conta.</p></div></div>
+      <div class="listing-grid">{% for item in items %}<article class="listing"><div class="listing-photo">{% if item.photo %}<img src="{{ item.photo.url }}" alt="Foto de {{ item.name }}">{% else %}<div class="placeholder">{% if item.category == 'eletronicos' %}🎧{% elif item.category == 'chaves_documentos' %}🔑{% elif item.category == 'material_escolar' %}✏️{% elif item.category == 'roupas_acessorios' %}🧥{% else %}🎒{% endif %}</div>{% endif %}<span class="status {{ item.kind }}">{{ item.get_kind_display }}</span>{% if item.is_resolved %}<span class="status resolved">Resolvido</span>{% endif %}</div><div class="listing-body"><span class="listing-category">{{ item.get_category_display }}</span><h2>{{ item.name }}</h2><p>{{ item.description }}</p><div class="listing-meta"><span>Local: <strong>{{ item.location }}</strong></span><span>{{ item.event_date|date:"d/m/Y" }}</span></div><div class="listing-footer"><a class="button whatsapp" href="{{ item.whatsapp_url }}" target="_blank" rel="noopener noreferrer">Chamar no WhatsApp ↗</a></div></div></article>{% empty %}<div class="empty-state">Você ainda não cadastrou nenhum aviso.</div>{% endfor %}</div>
+    </section>
+  </main>
+  {% include 'portal/_item_form_modal.html' %}
+</body>
+</html>

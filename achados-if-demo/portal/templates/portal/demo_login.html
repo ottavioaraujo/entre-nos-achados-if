@@ -1,0 +1,31 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f6f2">
+  <title>Acesso de teste — Entre Nós</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  {% include 'portal/_theme_init.html' %}
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'portal/site.css' %}">
+</head>
+<body class="login-body">
+  <div class="topline">Demonstração local · Ambiente de desenvolvimento</div>
+  <header class="header"><div class="header-main"><div class="campus-label">Achados e perdidos<br>Comunidade do IFRN</div><a class="logo" href="{% url 'portal:index' %}">ENTRE NÓS<small>ACHADOS DO CAMPUS</small></a><div class="header-actions">{% include 'portal/_theme_switcher.html' %}<a class="button outline" href="{% url 'portal:board' %}">Voltar ao mural</a></div></div></header>
+  <main class="login-page wrap"><section class="login-card demo-login-card">
+    <span class="eyebrow">Somente neste ambiente local</span><h1>Acesso de teste</h1>
+    <p>Use uma das contas de demonstração para explorar o portal.</p>
+    <div class="demo-credentials"><div><span>Painel de gestão</span><strong>admin <i>/</i> 1234</strong></div><div><span>Área do usuário</span><strong>user <i>/</i> 1234</strong></div></div>
+    {% if error %}<p class="demo-error" role="alert">{{ error }}</p>{% endif %}
+    <form method="post" class="demo-form">{% csrf_token %}
+      <label for="demo-username">Usuário</label><input id="demo-username" name="username" autocomplete="username" required autofocus>
+      <label for="demo-password">Senha</label><input id="demo-password" name="password" type="password" autocomplete="current-password" required>
+      <button class="button form-submit" type="submit">Entrar no ambiente de teste</button>
+    </form>
+    <p class="demo-footnote">Essas contas só funcionam quando o portal está em modo de desenvolvimento.</p>
+  </section></main>
+  <footer class="footer"><div class="footer-inner"><a class="footer-logo" href="{% url 'portal:index' %}">ENTRE NÓS</a><div class="footer-links"><a href="{% url 'portal:board' %}">Mural público</a><a href="{% url 'portal:index' %}">Página inicial</a></div></div></footer>
+</body>
+</html>
