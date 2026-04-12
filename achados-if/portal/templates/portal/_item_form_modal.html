@@ -1,0 +1,104 @@
+<div class="modal-backdrop" id="itemModal" aria-hidden="true">
+  <section class="modal modal-item" role="dialog" aria-modal="true" aria-labelledby="itemModalTitle">
+    <div class="modal-head"><div><h2 id="itemModalTitle">Cadastrar item</h2><p>Preencha os detalhes e deixe um contato para combinar a devolução. Não precisa entrar com uma conta.</p></div><button class="close" type="button" data-close-item-modal aria-label="Fechar formulário">×</button></div>
+    <form method="post" enctype="multipart/form-data" action="{% url 'portal:publish_item' %}" class="item-form" id="itemForm">
+      {% csrf_token %}{{ form.kind }}
+      <div class="modal-feedback" id="itemFormFeedback" role="status" aria-live="polite"></div>
+      <div class="form-errors" data-error-for="__all__">{{ form.non_field_errors }}</div>
+      <div class="kind-switch" role="group" aria-label="Tipo de aviso"><button type="button" class="filter-button active" data-kind="lost">Perdi algo</button><button type="button" class="filter-button" data-kind="found">Encontrei algo</button></div>
+      <div class="form-grid">
+        <div class="field"><label for="id_name">Nome do item *</label>{{ form.name }}<span class="field-errors" data-error-for="name">{{ form.name.errors }}</span></div>
+        <div class="field"><label for="id_category">Categoria *</label>{{ form.category }}<span class="field-errors" data-error-for="category">{{ form.category.errors }}</span></div>
+        <div class="field"><label for="id_event_date">Data aproximada *</label>{{ form.event_date }}<span class="field-errors" data-error-for="event_date">{{ form.event_date.errors }}</span></div>
+        <div class="field"><label for="id_location">Onde? *</label>{{ form.location }}<span class="field-errors" data-error-for="location">{{ form.location.errors }}</span></div>
+        <div class="field full"><label for="id_description">Descrição *</label>{{ form.description }}<span class="field-errors" data-error-for="description">{{ form.description.errors }}</span><span class="hint">Em itens encontrados, guarde detalhes únicos para confirmar o dono.</span></div>
+        <div class="field full"><label for="id_photo">Foto do objeto (opcional)</label>{{ form.photo }}<span class="field-errors" data-error-for="photo">{{ form.photo.errors }}</span><span class="hint">Imagem de até 5 MB.</span><img class="photo-preview" id="photoPreview" alt="Prévia da foto" hidden></div>
+        <div class="field full"><label for="id_contact_phone">Número de WhatsApp com DDD *</label>{{ form.contact_phone }}<span class="field-errors" data-error-for="contact_phone">{{ form.contact_phone.errors }}</span><span class="hint">Ex.: (84) 99999-9999. Esse número ficará visível no aviso.</span></div>
+      </div>
+      <button class="button form-submit" type="submit">Publicar aviso</button>
+    </form>
+  </section>
+</div>
+<script>
+(() => {
+  const modal = document.getElementById("itemModal");
+  const form = document.getElementById("itemForm");
+  if (!modal || !form) return;
+  const kindInput = form.querySelector('[name="kind"]');
+  const kindButtons = modal.querySelectorAll("[data-kind]");
+  const feedback = document.getElementById("itemFormFeedback");
+  const submitButton = form.querySelector('[type="submit"]');
+  const photoField = form.querySelector('[name="photo"]');
+  const preview = document.getElementById("photoPreview");
+  let lastTrigger = null;
+
+  function chooseKind(value) {
+    kindInput.value = value;
+    kindButtons.forEach(button => button.classList.toggle("active", button.dataset.kind === value));
+  }
+  function openModal(kind, trigger) {
+    lastTrigger = trigger;
+    chooseKind(kind || "lost");
+    feedback.textContent = "";
+    feedback.className = "modal-feedback";
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    modal.querySelector("input:not([type=hidden])")?.focus();
+  }
+  function closeModal() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    lastTrigger?.focus();
+  }
+  document.querySelectorAll("[data-open-item-modal]").forEach(trigger => trigger.addEventListener("click", () => openModal(trigger.dataset.kind, trigger)));
+  modal.querySelectorAll("[data-close-item-modal]").forEach(button => button.addEventListener("click", closeModal));
+  kindButtons.forEach(button => button.addEventListener("click", () => chooseKind(button.dataset.kind)));
+  modal.addEventListener("click", event => { if (event.target === modal) closeModal(); });
+  document.addEventListener("keydown", event => { if (event.key === "Escape" && modal.classList.contains("open")) closeModal(); });
+  photoField?.addEventListener("change", () => {
+    const file = photoField.files?.[0];
+    if (!file) { preview.hidden = true; preview.removeAttribute("src"); return; }
+    preview.src = URL.createObjectURL(file);
+    preview.hidden = false;
+  });
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+    feedback.textContent = "";
+    feedback.className = "modal-feedback";
+    form.querySelectorAll("[data-error-for]").forEach(box => { if (box.dataset.errorFor !== "__all__") box.textContent = ""; });
+    form.querySelectorAll("[aria-invalid=true]").forEach(field => field.removeAttribute("aria-invalid"));
+    submitButton.disabled = true;
+    submitButton.textContent = "Publicando…";
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: {"X-Requested-With": "XMLHttpRequest", "Accept": "application/json"}
+      });
+      const result = await response.json();
+      if (!response.ok || !result.ok) {
+        feedback.textContent = result.message || "Não foi possível publicar. Confira os dados e tente novamente.";
+        feedback.classList.add("is-error");
+        Object.entries(result.errors || {}).forEach(([name, errors]) => {
+          const errorBox = form.querySelector(`[data-error-for="${name}"]`);
+          const field = form.elements.namedItem(name);
+          if (errorBox) errorBox.textContent = errors.join(" ");
+          if (field && "setAttribute" in field) field.setAttribute("aria-invalid", "true");
+        });
+        return;
+      }
+      feedback.textContent = result.message;
+      feedback.classList.add("is-success");
+      window.setTimeout(() => window.location.assign(result.redirect), 700);
+    } catch (_error) {
+      feedback.textContent = "Falha de conexão. Tente publicar novamente.";
+      feedback.classList.add("is-error");
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = "Publicar aviso";
+    }
+  });
+})();
+</script>

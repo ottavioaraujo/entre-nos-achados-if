@@ -1,0 +1,21 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Entrar com SUAP — Entre Nós</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  {% include 'portal/_theme_init.html' %}
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'portal/site.css' %}">
+</head>
+<body class="login-body">
+  <div class="topline">Acesso institucional · IFRN</div>
+  <header class="header"><div class="header-main"><div class="campus-label">Achados e perdidos<br>Comunidade do IFRN</div><a class="logo" href="{% url 'portal:index' %}">ENTRE NÓS<small>ACHADOS DO CAMPUS</small></a><div class="header-actions">{% include 'portal/_theme_switcher.html' %}<a class="button outline" href="{% url 'portal:board' %}">Voltar ao mural</a></div></div></header>
+  <main class="login-page wrap"><section class="login-card"><span class="eyebrow">Acesso seguro</span><h1>Entrar com SUAP</h1><p>Use sua conta institucional do IFRN para publicar e acompanhar avisos. O painel de gestão aparece apenas para as matrículas autorizadas.</p>
+    <div class="setup-message"><strong>Integração aguardando credenciais</strong><p>O responsável pelo portal precisa cadastrar a aplicação no SUAP e preencher <code>SUAP_CLIENT_ID</code> e <code>SUAP_CLIENT_SECRET</code> no arquivo <code>.env</code> local.</p><p>URL de retorno que deve ser cadastrada: <code>http://127.0.0.1:8000/auth/suap/callback/</code></p></div>
+  </section></main>
+  <footer class="footer"><div class="footer-inner"><a class="footer-logo" href="{% url 'portal:index' %}">ENTRE NÓS</a><div class="footer-links"><a href="{% url 'portal:board' %}">Mural público</a><a href="{% url 'portal:index' %}">Página inicial</a></div></div></footer>
+</body>
+</html>

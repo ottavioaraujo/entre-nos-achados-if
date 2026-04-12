@@ -1,0 +1,20 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Editar aviso — Entre Nós</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  {% include 'portal/_theme_init.html' %}
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'portal/site.css' %}">
+</head>
+<body class="management-body">
+  <div class="topline">Acesso restrito · Gestão de achados do campus</div>
+  <header class="header"><div class="header-main"><div class="campus-label">Painel administrativo</div><a class="logo" href="{% url 'portal:management' %}">ENTRE NÓS<small>GESTÃO DO CAMPUS</small></a><div class="header-actions">{% include 'portal/_theme_switcher.html' %}<a class="button outline" href="{% url 'portal:management' %}">Voltar ao painel</a></div></div></header>
+  <main class="wrap edit-page"><section class="account-form-panel"><div class="panel-heading"><span class="eyebrow">Registro #{{ item.pk }}</span><h1>Editar aviso</h1><p>Atualize as informações publicadas no mural.</p></div><div class="form-errors">{{ form.non_field_errors }}</div>
+    <form method="post" enctype="multipart/form-data" class="item-form">{% csrf_token %}{{ form.kind }}<div class="form-grid"><div class="field"><label for="id_name">Nome do item</label>{{ form.name }}{{ form.name.errors }}</div><div class="field"><label for="id_category">Categoria</label>{{ form.category }}{{ form.category.errors }}</div><div class="field"><label for="id_event_date">Data aproximada</label>{{ form.event_date }}{{ form.event_date.errors }}</div><div class="field"><label for="id_location">Onde?</label>{{ form.location }}{{ form.location.errors }}</div><div class="field full"><label for="id_description">Descrição</label>{{ form.description }}{{ form.description.errors }}</div><div class="field full"><label for="id_photo">Foto</label>{{ form.photo }}{{ form.photo.errors }}</div><div class="field full"><label for="id_contact_phone">WhatsApp</label>{{ form.contact_phone }}{{ form.contact_phone.errors }}</div></div><button class="button form-submit" type="submit">Salvar alterações</button></form>
+  </section></main>
+</body>
+</html>
