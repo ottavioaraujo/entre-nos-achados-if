@@ -1,0 +1,13 @@
+.preview-label{color:rgba(255,255,255,.82);font-size:8px;font-weight:700;letter-spacing:.18em}
+.preview-gallery{position:relative;min-height:88svh;padding:100px max(30px,calc((100vw - 1180px)/2 + 30px)) 110px;background:#f7f6f2;scroll-snap-align:start}
+.preview-gallery-head{display:grid;gap:12px;max-width:600px;margin-bottom:36px}
+.preview-gallery-head h2{margin:4px 0 0;font:500 clamp(40px,5vw,68px)/1.03 "Playfair Display",Georgia,serif;letter-spacing:-.045em}
+.preview-gallery-head p{max-width:460px;margin:0;color:#686760;font-size:13px;line-height:1.7}
+.preview-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.preview-card{position:relative;min-width:0;background:#fff;padding-bottom:17px;border:1px solid #e4e2db}
+.preview-card img{display:block;width:100%;height:clamp(190px,25vw,310px);object-fit:cover;background:#ecebe6}
+.preview-card>span{display:inline-block;margin:15px 15px 0;padding:6px 8px;background:#f2f1ec;color:#536b58;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.12em}
+.preview-card h3{margin:10px 15px 0;font:500 18px "Playfair Display",Georgia,serif}
+.preview-gallery .chapter-next{right:max(30px,calc((100vw - 1180px)/2 + 30px));bottom:28px}
+@media(max-width:760px){.preview-label{display:none}.preview-gallery{min-height:0;padding:74px 18px 95px}.preview-gallery-head{margin-bottom:25px}.preview-gallery-head h2{font-size:clamp(38px,10vw,54px)}.preview-gallery-head p{font-size:12px}.preview-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.preview-card{padding-bottom:12px}.preview-card img{height:220px}.preview-card>span{margin:10px 10px 0;font-size:7px}.preview-card h3{margin:8px 10px 0;font-size:16px}.preview-gallery .chapter-next{right:18px;bottom:18px}}
+@media(max-width:430px){.preview-cards{gap:8px}.preview-card img{height:175px}.preview-card h3{font-size:14px}}
