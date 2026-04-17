@@ -1,4 +1,5 @@
 name: Publicar prévia no GitHub Pages
+# Publica somente `docs/`; o Django é implantado separadamente na Vercel.
 
 on:
   push:
