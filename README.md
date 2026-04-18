@@ -2,6 +2,8 @@
 
 Portal Django para publicar, consultar e administrar avisos de itens perdidos e encontrados no campus.
 
+Prévia no GitHub Pages: <https://ottavioaraujo.github.io/entre-nos-achados-if/>.
+
 ## Pastas
 
 - `achados-if/`: aplicação principal com autenticação SUAP e painel de gestão.
