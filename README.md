@@ -1,66 +1,33 @@
 # Entre Nós — Achados e Perdidos do Campus
 
-Portal Django para publicar, consultar e administrar avisos de itens perdidos e encontrados no campus.
+O Entre Nós aproxima quem perdeu um objeto de quem o encontrou. A comunidade pode consultar avisos, compartilhar informações sobre os itens e combinar a devolução.
 
-Prévia no GitHub Pages: <https://ottavioaraujo.github.io/entre-nos-achados-if/>.
+**Prévia visual:** [entre-nos no GitHub Pages](https://ottavioaraujo.github.io/entre-nos-achados-if/). Esta página apresenta o visual do projeto; os cadastros e a gestão ficam nas aplicações Django.
 
-## Pastas
+## Demonstração
 
-- `achados-if/`: aplicação principal com autenticação SUAP e painel de gestão.
-- `achados-if-demo/`: demonstração local independente, com itens e fotos de exemplo.
-- `docs/`: prévia visual estática usada pelo GitHub Pages. Ela não salva cadastros nem substitui o Django.
+A pasta [`achados-if-demo`](achados-if-demo/) contém uma versão independente para apresentar e experimentar o portal. Ela vem com itens e fotos de exemplo, além de acessos de teste para conhecer a área do usuário e o painel administrativo.
 
-Os dois projetos Django têm dependências, configurações e bancos separados. Arquivos `.env`, bancos SQLite, uploads e ambientes virtuais ficam fora do Git.
+Na demonstração local, use:
 
-## GitHub Pages
+| Perfil | Usuário | Senha |
+|---|---|---|
+| Administração | `admin` | `1234` |
+| Usuário | `user` | `1234` |
 
-O Pages publica apenas `docs/`. Após criar o repositório, em **Settings → Pages**, escolha **GitHub Actions** como fonte. O workflow `.github/workflows/pages.yml` publica a prévia a cada atualização da pasta `docs/`.
+Esses acessos são apenas para a demonstração local; não pertencem ao SUAP nem ao sistema real.
 
-O GitHub Pages serve arquivos estáticos; por isso a prévia não oferece login, banco, formulário funcional ou painel administrativo. A aplicação Django deve ser hospedada em um serviço que execute Python, como a Vercel.
+## Projeto real
 
-## Preparar a aplicação principal na Vercel
+A pasta [`achados-if`](achados-if/) contém a aplicação principal. Ela integra o login institucional do SUAP IFRN e oferece recursos de consulta e gestão dos avisos para a comunidade do campus.
 
-Importe este repositório e defina a pasta raiz do projeto como `achados-if`. A detecção de Django/Python da Vercel cuida do roteamento e dos arquivos estáticos; não é necessário um `vercel.json` personalizado.
+O projeto inclui:
 
-Configure os valores abaixo em **Project Settings → Environment Variables**. Não publique valores secretos no repositório.
+- avisos de itens perdidos e encontrados;
+- mural com busca e filtros por categoria e tipo;
+- fotos dos objetos e contato por WhatsApp;
+- área de gestão para acompanhar e atualizar avisos.
 
-```text
-SECRET_KEY=<chave aleatória longa>
-DEBUG=False
-ALLOWED_HOSTS=.vercel.app,seu-dominio
-CSRF_TRUSTED_ORIGINS=https://seu-projeto.vercel.app,https://seu-dominio
-DB_ENGINE=mysql
-DB_NAME=<nome do banco MySQL externo>
-DB_USER=<usuário do banco>
-DB_PASSWORD=<senha do banco>
-DB_HOST=<servidor do banco>
-DB_PORT=3306
-SUAP_BASE_URL=https://suap.ifrn.edu.br
-SUAP_CLIENT_ID=<client id>
-SUAP_CLIENT_SECRET=<client secret>
-SUAP_REDIRECT_URI=https://seu-projeto.vercel.app/auth/suap/callback/
-SUAP_ADMIN_IDS=<matrículas separadas por vírgula>
-```
+## Tecnologias
 
-Crie o banco MySQL em um provedor externo e aplique as migrações com `python manage.py migrate` usando essas credenciais antes de usar o site. Cadastre a URL pública de retorno no SUAP IFRN.
-
-As fotos enviadas por usuários ainda usam armazenamento local. Em funções serverless, arquivos locais não são armazenamento persistente; antes de aceitar cadastros com fotos em produção, configure um serviço durável de objetos e conecte-o ao Django. As fotos de exemplo da pasta `portal/static/` são arquivos estáticos e podem ser servidas pela CDN.
-
-### Demonstração
-
-Para publicar a demonstração em vez da versão SUAP, selecione `achados-if-demo` como pasta raiz na Vercel. Ela usa SQLite por padrão apenas para desenvolvimento local e o login de teste fica desativado quando `DEBUG=False`. Configure um banco MySQL externo e contas administrativas reais para uso hospedado.
-
-## Desenvolvimento local
-
-Em cada pasta de projeto:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-python manage.py migrate
-python manage.py runserver
-```
-
-Na demonstração, execute também `python manage.py setup_demo` e use a porta 8001. Nunca adicione `.env` ao Git; mantenha os segredos apenas no arquivo local ou no painel de ambiente da hospedagem.
+As aplicações usam Django e têm configurações e dados independentes: a demonstração serve para apresentação e testes locais, enquanto o projeto principal integra a autenticação institucional do SUAP.
