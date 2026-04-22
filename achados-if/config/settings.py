@@ -62,6 +62,10 @@ if DB_ENGINE == "sqlite":
         "NAME": BASE_DIR / "db.sqlite3",
     }}
 else:
+    mysql_options = {"charset": "utf8mb4"}
+    db_ssl_ca = os.getenv("DB_SSL_CA", "").strip()
+    if db_ssl_ca:
+        mysql_options["ssl"] = {"ca": db_ssl_ca}
     DATABASES = {"default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": os.getenv("DB_NAME", "entre_nos"),
@@ -69,7 +73,7 @@ else:
         "PASSWORD": os.getenv("DB_PASSWORD", ""),
         "HOST": os.getenv("DB_HOST", "127.0.0.1"),
         "PORT": os.getenv("DB_PORT", "3306"),
-        "OPTIONS": {"charset": "utf8mb4"},
+        "OPTIONS": mysql_options,
     }}
 
 AUTH_PASSWORD_VALIDATORS = [
