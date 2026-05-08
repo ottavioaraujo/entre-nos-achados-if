@@ -1,11 +1,8 @@
-from django.conf import settings
 from django.db import migrations, models
-import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("portal", "0001_initial"),
     ]
 
@@ -13,12 +10,10 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="campusitem",
             name="reporter",
-            field=models.ForeignKey(
+            field=models.BigIntegerField(
                 blank=True,
+                db_column="reporter_id",
                 null=True,
-                on_delete=django.db.models.deletion.SET_NULL,
-                related_name="campus_items",
-                to=settings.AUTH_USER_MODEL,
                 verbose_name="publicado por",
             ),
         ),
