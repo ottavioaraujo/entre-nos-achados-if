@@ -82,7 +82,7 @@ def publish_item(request):
     wants_json = request.headers.get("x-requested-with") == "XMLHttpRequest"
     if form.is_valid():
         item = form.save(commit=False)
-        item.reporter = request.user if request.user.is_authenticated else None
+        item.reporter = request.user.pk if request.user.is_authenticated else None
         item.save()
         if wants_json:
             return JsonResponse({
