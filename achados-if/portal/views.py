@@ -109,9 +109,11 @@ def suap_login(request):
         return render(request, "portal/login.html", {"suap_configured": False})
 
     state = secrets.token_urlsafe(32)
-    request.session["suap_oauth_state"] = state
+    # Keep each authorization attempt separate so parallel login tabs do not
+    # overwrite one another's CSRF state in the shared browser session.
+    request.session[f"suap_oauth_state:{state}"] = state
     requested_next = request.GET.get("next", "")
-    request.session["suap_oauth_next"] = requested_next if url_has_allowed_host_and_scheme(
+    request.session[f"suap_oauth_next:{state}"] = requested_next if url_has_allowed_host_and_scheme(
         requested_next,
         allowed_hosts={request.get_host()},
         require_https=request.is_secure(),
@@ -131,8 +133,8 @@ def suap_callback(request):
         messages.error(request, "O acesso pelo SUAP foi cancelado ou recusado.")
         return redirect("portal:index")
 
-    expected_state = request.session.pop("suap_oauth_state", "")
     received_state = request.GET.get("state", "")
+    expected_state = request.session.pop(f"suap_oauth_state:{received_state}", "")
     if not expected_state or not secrets.compare_digest(expected_state, received_state):
         return HttpResponseBadRequest("Não foi possível validar o retorno do SUAP. Inicie o login novamente.")
 
@@ -206,7 +208,7 @@ def suap_callback(request):
     login(request, user, backend="django.contrib.auth.backends.ModelBackend")
     request.session["suap_access_token"] = access_token
 
-    requested_next = request.session.pop("suap_oauth_next", "")
+    requested_next = request.session.pop(f"suap_oauth_next:{received_state}", "")
     if requested_next and url_has_allowed_host_and_scheme(
         requested_next,
         allowed_hosts={request.get_host()},
