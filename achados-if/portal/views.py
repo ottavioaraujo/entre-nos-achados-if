@@ -288,13 +288,13 @@ def account(request):
     return render(request, "portal/account.html", {
         "form": CampusItemForm(initial={"kind": CampusItem.Kind.LOST}),
         "demo_login_enabled": False,
-        "items": request.user.campus_items.all(),
+        "items": CampusItem.objects.filter(reporter=request.user.pk),
     })
 
 
 @user_passes_test(lambda user: user.is_staff)
 def management(request):
-    items = CampusItem.objects.select_related("reporter").all()
+    items = CampusItem.objects.all()
     status = request.GET.get("status", "active")
     kind = request.GET.get("tipo", "all")
     query = request.GET.get("q", "").strip()
@@ -310,6 +310,18 @@ def management(request):
             | Q(location__icontains=query)
             | Q(description__icontains=query)
             | Q(contact_phone__icontains=query)
+        )
+
+    # reporter is stored as a user ID (BigIntegerField) for TiDB compatibility,
+    # so resolve names explicitly instead of using select_related.
+    items = list(items)
+    reporter_ids = {item.reporter for item in items if item.reporter}
+    reporters = get_user_model().objects.in_bulk(reporter_ids)
+    for item in items:
+        reporter = reporters.get(item.reporter)
+        item.reporter_display = (
+            reporter.get_full_name() or reporter.username
+            if reporter else ("Conta removida" if item.reporter else "Comunidade")
         )
 
     totals = CampusItem.objects.aggregate(
