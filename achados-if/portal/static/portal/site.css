@@ -220,6 +220,24 @@ html[data-theme="suap"] .landing-body .stats-intro h2 em{color:#0a7f70}
 html[data-theme="suap"] .landing-body .landing-how{background:#094e45}
 html[data-theme="suap"] .landing-body .landing-how .how-head h2 em{color:#e5fffc}
 html[data-theme="suap"] .landing-body .landing-final{background:#e6e6e6}
+
+/* Full-screen, typographic page entrance inspired by the reference loader. */
+.page-loader{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;overflow:hidden;background:#eee9dd;color:#171715;opacity:1;visibility:visible;transition:opacity .58s ease,visibility .58s ease;animation:page-loader-failsafe .8s 2.7s forwards}
+.page-loader__content{width:min(100% - 36px,1100px);display:flex;flex-direction:column;align-items:center;text-align:center}
+.page-loader__wordmark{display:block;padding-left:.1em;font:900 clamp(2rem,10vw,8rem)/.9 "Arial Black",Arial,sans-serif;letter-spacing:.1em;white-space:nowrap;animation:loader-wordmark-in .68s cubic-bezier(.2,.75,.25,1) both}
+.page-loader__caption{margin-top:20px;padding-left:.22em;font:500 10px/1.4 var(--sans);letter-spacing:.22em;animation:loader-caption-in .55s .12s ease both}
+.page-loader__progress{display:block;width:min(220px,58vw);height:1px;margin-top:39px;overflow:hidden;background:rgba(23,23,21,.2)}
+.page-loader__progress span{display:block;width:100%;height:100%;background:currentColor;transform:scaleX(0);transform-origin:left center;transition:transform .22s ease;animation:loader-progress 1.8s .12s cubic-bezier(.55,.05,.2,1) forwards}
+.page-loader--loaded .page-loader__progress span{animation:none;transform:scaleX(1)}
+.page-loader--leaving{opacity:0;visibility:hidden;pointer-events:none;animation:none}
+@keyframes loader-wordmark-in{from{opacity:0;transform:translateY(15px);letter-spacing:.17em}to{opacity:1;transform:translateY(0);letter-spacing:.1em}}
+@keyframes loader-caption-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@keyframes loader-progress{to{transform:scaleX(1)}}
+@keyframes page-loader-failsafe{to{opacity:0;visibility:hidden;pointer-events:none}}
+html[data-theme="suap"] .page-loader{background:#f2f2f2;color:#1a1a1a}
+html[data-theme="suap"] .page-loader__progress span{background:#0a7f70}
+@media(max-width:480px){.page-loader__wordmark{font-size:clamp(1.8rem,10vw,3rem);letter-spacing:.075em}.page-loader__caption{font-size:8px;margin-top:15px}.page-loader__progress{margin-top:30px}}
+@media(prefers-reduced-motion:reduce){.page-loader{transition:none;animation:page-loader-failsafe .01s 2.2s forwards}.page-loader__wordmark,.page-loader__caption,.page-loader__progress span{animation:none}.page-loader__wordmark,.page-loader__caption{opacity:1;transform:none}.page-loader__progress span{transform:scaleX(.65)}}
 @media(max-width:760px){
   html.landing-scroll{scroll-snap-type:y proximity}
   .landing-body .header-main{height:64px;padding:0 16px;grid-template-columns:auto minmax(0,1fr)}
