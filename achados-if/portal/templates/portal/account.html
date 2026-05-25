@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="{% static 'portal/site.css' %}">
 </head>
 <body>
+  {% include 'portal/_page_loader.html' %}
   <div class="topline">Área autenticada · Entre Nós</div>
   <header class="header"><div class="header-main"><div class="campus-label">{% if demo_login_enabled %}Conta de demonstração{% else %}Conta institucional{% endif %}<br>{{ request.user.get_full_name|default:request.user.username }}</div><a class="logo" href="{% url 'portal:index' %}">ENTRE NÓS<small>ACHADOS DO CAMPUS</small></a><div class="header-actions">{% include 'portal/_theme_switcher.html' %}{% if request.user.is_staff %}<a class="button" href="{% url 'portal:management' %}">Painel de gestão</a>{% endif %}<form method="post" action="{% url 'portal:sign_out' %}">{% csrf_token %}<button class="button outline" type="submit">Sair</button></form></div></div><nav class="nav"><a href="{% url 'portal:index' %}">Início</a><a href="{% url 'portal:board' %}">Mural público</a><button class="nav-action" type="button" data-open-item-modal data-kind="lost">Cadastrar item</button><a href="#meus-itens">Meus avisos</a></nav></header>
   <main class="wrap account-page">
