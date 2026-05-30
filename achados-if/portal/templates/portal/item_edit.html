@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="{% static 'portal/site.css' %}">
 </head>
 <body class="management-body">
+  {% include 'portal/_page_loader.html' %}
   <div class="topline">Acesso restrito · Gestão de achados do campus</div>
   <header class="header"><div class="header-main"><div class="campus-label">Painel administrativo</div><a class="logo" href="{% url 'portal:management' %}">ENTRE NÓS<small>GESTÃO DO CAMPUS</small></a><div class="header-actions">{% include 'portal/_theme_switcher.html' %}<a class="button outline" href="{% url 'portal:management' %}">Voltar ao painel</a></div></div></header>
   <main class="wrap edit-page"><section class="account-form-panel"><div class="panel-heading"><span class="eyebrow">Registro #{{ item.pk }}</span><h1>Editar aviso</h1><p>Atualize as informações publicadas no mural.</p></div><div class="form-errors">{{ form.non_field_errors }}</div>
