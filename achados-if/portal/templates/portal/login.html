@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="{% static 'portal/site.css' %}">
 </head>
 <body class="login-body">
+  {% include 'portal/_page_loader.html' %}
   <div class="topline">Acesso institucional · IFRN</div>
   <header class="header"><div class="header-main"><div class="campus-label">Achados e perdidos<br>Comunidade do IFRN</div><a class="logo" href="{% url 'portal:index' %}">ENTRE NÓS<small>ACHADOS DO CAMPUS</small></a><div class="header-actions">{% include 'portal/_theme_switcher.html' %}<a class="button outline" href="{% url 'portal:board' %}">Voltar ao mural</a></div></div></header>
   <main class="login-page wrap"><section class="login-card"><span class="eyebrow">Acesso seguro</span><h1>Entrar com SUAP</h1><p>Use sua conta institucional do IFRN para publicar e acompanhar avisos. O painel de gestão aparece apenas para as matrículas autorizadas.</p>
