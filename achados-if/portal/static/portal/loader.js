@@ -1,30 +1,46 @@
 (() => {
-  const loader = document.querySelector(".page-loader");
-  if (!loader) return;
+  const overlay = document.querySelector(".transition");
+  const background = document.querySelector(".transition-bg");
+  const texts = Array.from(document.querySelectorAll(".page-transition-text"));
+  if (!overlay || !background || !texts.length) return;
 
-  const startedAt = performance.now();
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const minimumDuration = prefersReducedMotion ? 0 : 650;
-  let dismissed = false;
-
-  const dismiss = () => {
-    if (dismissed) return;
-    dismissed = true;
-    loader.classList.add("page-loader--loaded");
-    const remaining = Math.max(0, minimumDuration - (performance.now() - startedAt));
-
-    window.setTimeout(() => {
-      loader.classList.add("page-loader--leaving");
-      window.setTimeout(() => loader.remove(), 620);
-    }, remaining);
-  };
-
-  if (document.readyState === "complete") {
-    dismiss();
-  } else {
-    window.addEventListener("load", dismiss, { once: true });
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion || typeof background.animate !== "function") {
+    overlay.style.display = "none";
+    return;
   }
 
-  // Never let the cover stay on screen if a third-party asset stalls.
-  window.setTimeout(dismiss, 2200);
+  const easing = "cubic-bezier(0.76, 0, 0.24, 1)";
+  let animations = [];
+  let finished = false;
+  let safetyTimer;
+
+  document.body.classList.add("no-scroll-transition");
+  document.body.setAttribute("aria-busy", "true");
+  overlay.style.display = "block";
+
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    window.clearTimeout(safetyTimer);
+    animations.forEach((animation) => animation.cancel());
+    overlay.style.display = "none";
+    document.body.classList.remove("no-scroll-transition");
+    document.body.removeAttribute("aria-busy");
+  };
+
+  const textAnimations = texts.map((text) =>
+    text.animate(
+      [{ transform: "translateX(0)" }, { transform: "translateX(-100%)" }],
+      { duration: 1900, easing, fill: "forwards" }
+    )
+  );
+  const backgroundAnimation = background.animate(
+    [{ transform: "scale(1)" }, { transform: "scale(0)" }],
+    { duration: 800, delay: 2000, easing: "ease", fill: "forwards" }
+  );
+
+  animations = [...textAnimations, backgroundAnimation];
+  safetyTimer = window.setTimeout(finish, 3800);
+  backgroundAnimation.finished.then(finish).catch(finish);
 })();
