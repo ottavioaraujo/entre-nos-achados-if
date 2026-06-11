@@ -1,9 +1,10 @@
 {% load static %}
-<div class="page-loader" role="status" aria-label="Carregando o Entre Nós">
-  <div class="page-loader__content">
-    <span class="page-loader__wordmark">ENTRE NÓS</span>
-    <span class="page-loader__caption">ACHADOS DO CAMPUS</span>
-    <span class="page-loader__progress" aria-hidden="true"><span></span></span>
+<div class="transition" role="status" aria-label="Carregando o Entre Nós">
+  <div class="transition-content">
+    <div class="transition-bg">
+      <div class="transition-text-wrap"><span class="page-transition-text is-brand">Entre Nós</span></div>
+      <div class="transition-text-wrap"><span class="page-transition-text is-welcome">Bem-vindo</span></div>
+    </div>
   </div>
 </div>
 <script defer src="{% static 'portal/loader.js' %}"></script>
