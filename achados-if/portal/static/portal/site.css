@@ -226,13 +226,13 @@ html[data-theme="suap"] .landing-body .landing-final{background:#e6e6e6}
 .transition{position:fixed;inset:0;z-index:10000;width:100vw;height:100vh;height:100dvh;overflow:hidden;pointer-events:auto;animation:transition-failsafe .45s 3.6s forwards}
 .transition-content{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
 .transition-bg{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;width:max(280vw,110vh);height:max(280vw,110vh);border-radius:50%;background:#b7d66a;will-change:transform}
-.transition-text-wrap{position:absolute;display:flex;align-items:center;justify-content:flex-start;height:1.15em;overflow:hidden;white-space:nowrap}
-.page-transition-text{display:block;min-width:5.7em;overflow:hidden;color:#06364f;font-family:"Anton",Impact,"Haettenschweiler","Arial Narrow",sans-serif;font-size:clamp(3.1rem,12.5vw,12rem);font-weight:900;line-height:1;text-align:center;text-transform:uppercase;white-space:pre;will-change:transform,opacity}
+.transition-text-wrap{position:absolute;top:50%;left:50%;display:flex;width:100vw;height:1.2em;align-items:center;justify-content:center;overflow:hidden;transform:translate(-50%,-50%);font-size:clamp(3.1rem,12.5vw,12rem);white-space:nowrap}
+.page-transition-text{display:block;min-width:5.7em;overflow:visible;color:#06364f;font-family:"Anton",Impact,"Haettenschweiler","Arial Narrow",sans-serif;font-size:inherit;font-weight:900;line-height:1.08;text-align:center;text-transform:uppercase;white-space:pre;will-change:transform,opacity}
 .page-transition-text.is-welcome{position:relative;left:100%}
 @keyframes transition-failsafe{to{opacity:0;visibility:hidden;pointer-events:none}}
 html[data-theme="suap"] .transition-bg{background:#0a7f70}
 html[data-theme="suap"] .page-transition-text{color:#fff}
-@media(max-width:767px){.page-transition-text{font-size:15vw;min-width:5.4em}.transition-bg{width:max(280vw,110vh);height:max(280vw,110vh)}}
+@media(max-width:767px){.transition-text-wrap{font-size:15vw}.page-transition-text{min-width:5.4em}.transition-bg{width:max(280vw,110vh);height:max(280vw,110vh)}}
 @media(prefers-reduced-motion:reduce){.transition{animation:transition-failsafe .01s forwards}.transition-bg,.page-transition-text{will-change:auto}}
 @media(max-width:760px){
   html.landing-scroll{scroll-snap-type:y proximity}
