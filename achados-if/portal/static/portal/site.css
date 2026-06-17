@@ -228,7 +228,8 @@ html[data-theme="suap"] .landing-body .landing-final{background:#e6e6e6}
 .transition-bg{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;width:max(280vw,110vh);height:max(280vw,110vh);border-radius:50%;background:#b7d66a;will-change:transform}
 .transition-text-wrap{position:absolute;top:50%;left:50%;display:flex;width:100vw;height:1.2em;align-items:center;justify-content:center;overflow:hidden;transform:translate(-50%,-50%);font-size:clamp(3.1rem,12.5vw,12rem);white-space:nowrap}
 .page-transition-text{display:block;min-width:5.7em;overflow:visible;color:#06364f;font-family:"Anton",Impact,"Haettenschweiler","Arial Narrow",sans-serif;font-size:inherit;font-weight:900;line-height:1.08;text-align:center;text-transform:uppercase;white-space:pre;will-change:transform,opacity}
-.page-transition-text.is-welcome{position:relative;left:100%}
+.page-transition-text.is-brand{opacity:1}
+.page-transition-text.is-welcome{opacity:0}
 @keyframes transition-failsafe{to{opacity:0;visibility:hidden;pointer-events:none}}
 html[data-theme="suap"] .transition-bg{background:#0a7f70}
 html[data-theme="suap"] .page-transition-text{color:#fff}
