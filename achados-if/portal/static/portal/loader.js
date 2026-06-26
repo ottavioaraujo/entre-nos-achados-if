@@ -32,8 +32,8 @@
   const textAnimations = texts.map((text) =>
     text.animate(
       text.classList.contains("is-welcome")
-        ? [{ transform: "translateX(100%)" }, { transform: "translateX(0)" }]
-        : [{ transform: "translateX(0)" }, { transform: "translateX(-100%)" }],
+        ? [{ transform: "translateX(calc(52vw + 50%))" }, { transform: "translateX(0)" }]
+        : [{ transform: "translateX(0)" }, { transform: "translateX(calc(-52vw - 50%))" }],
       { duration: 1900, easing, fill: "forwards" }
     )
   );
