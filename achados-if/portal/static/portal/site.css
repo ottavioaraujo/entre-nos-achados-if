@@ -156,8 +156,8 @@ body.landing-body{background:#f7f6f2}
 .landing-messages{margin-top:16px;color:#fff;font-size:11px}
 .landing-messages p{margin:0;padding:10px 13px;background:rgba(15,20,17,.7);border-left:3px solid #e8d9bc}
 .story-chapter{position:relative;min-height:86svh;scroll-snap-align:start;scroll-margin:0}
-.landing-stats.story-chapter{display:grid;align-items:center;max-width:none;margin:0;padding:110px max(30px,calc((100vw - var(--max))/2 + 30px)) 120px;background:#f7f6f2;border:0}
-.story-inner{width:100%;max-width:var(--max);padding:0;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(270px,.8fr);gap:clamp(40px,10vw,150px);align-items:center}
+.landing-stats.story-chapter{display:block;max-width:none;margin:0;padding:110px max(30px,calc((100vw - var(--max))/2 + 30px)) 120px;background:#f7f6f2;border:0}
+.story-inner{width:100%;max-width:var(--max);margin-inline:auto;padding:0;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(270px,.8fr);gap:clamp(40px,10vw,150px);align-items:center}
 .stats-intro{align-content:start;gap:14px}
 .stats-intro h2{max-width:670px;margin:12px 0 0;font:500 clamp(39px,5.2vw,72px)/1.05 var(--serif);letter-spacing:-.045em}
 .stats-intro h2 em{color:#657764;font-style:normal}
