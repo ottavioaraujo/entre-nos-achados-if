@@ -378,10 +378,7 @@ def delete_item(request, pk):
 @login_required
 def sign_out(request):
     access_token = request.session.get("suap_access_token", "")
-    revoked = _revoke_suap_token(access_token) if access_token else False
+    if access_token:
+        _revoke_suap_token(access_token)
     logout(request)
-    if revoked:
-        messages.success(request, "Você saiu. Na próxima entrada, o SUAP pedirá autorização novamente.")
-    else:
-        messages.warning(request, "Você saiu do portal. Não foi possível renovar a autorização do SUAP automaticamente.")
     return redirect("portal:index")
