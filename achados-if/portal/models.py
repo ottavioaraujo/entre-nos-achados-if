@@ -17,14 +17,27 @@ class CampusItem(models.Model):
         KEYS_DOCS = "chaves_documentos", "Chaves e documentos"
         OTHER = "outros", "Outros"
 
+    class EventPeriod(models.TextChoices):
+        TODAY = "today", "Hoje"
+        THIS_WEEK = "this_week", "Nesta semana"
+
     kind = models.CharField("tipo do aviso", max_length=8, choices=Kind.choices, db_index=True)
     name = models.CharField("nome do item", max_length=70)
     category = models.CharField("categoria", max_length=24, choices=Category.choices, db_index=True)
     event_date = models.DateField("data aproximada")
+    event_period = models.CharField(
+        "quando aconteceu",
+        max_length=16,
+        choices=EventPeriod.choices,
+        blank=True,
+        null=True,
+    )
     location = models.CharField("local no campus", max_length=80)
     description = models.CharField("descrição", max_length=300)
     contact_phone = models.CharField("WhatsApp de contato", max_length=20)
     photo = models.ImageField("foto", upload_to="items/%Y/%m/", blank=True)
+    photo_data = models.BinaryField("imagem armazenada", blank=True, null=True)
+    photo_content_type = models.CharField("tipo da imagem", max_length=32, blank=True)
     reporter = models.BigIntegerField("publicado por", db_column="reporter_id", null=True, blank=True)
     is_resolved = models.BooleanField("resolvido", default=False, db_index=True)
     created_at = models.DateTimeField("criado em", auto_now_add=True, db_index=True)
@@ -57,3 +70,18 @@ class CampusItem(models.Model):
         else:
             message = f"Olá! Vi seu aviso no Entre Nós sobre ‘{self.name}’, encontrado em {self.location}. Acredito que possa ser meu/de alguém que conheço. Podemos confirmar alguns detalhes?"
         return f"https://wa.me/{digits}?text={quote(message)}"
+
+
+class CampusItemComment(models.Model):
+    item = models.ForeignKey(CampusItem, on_delete=models.CASCADE, related_name="comments", verbose_name="aviso")
+    author = models.CharField("nome", max_length=60, blank=True)
+    body = models.CharField("comentário", max_length=500)
+    created_at = models.DateTimeField("criado em", auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ["created_at"]
+        verbose_name = "comentário"
+        verbose_name_plural = "comentários"
+
+    def __str__(self):
+        return f"Comentário em {self.item_id}"
