@@ -39,10 +39,10 @@
   );
   const backgroundAnimation = background.animate(
     [{ transform: "scale(1)" }, { transform: "scale(0)" }],
-    { duration: 800, delay: 3200, easing: "ease", fill: "forwards" }
+    { duration: 600, delay: 2400, easing: "ease", fill: "forwards" }
   );
 
   animations = [...textAnimations, backgroundAnimation];
-  safetyTimer = window.setTimeout(finish, 5200);
+  safetyTimer = window.setTimeout(finish, 4200);
   backgroundAnimation.finished.then(finish).catch(finish);
 })();
