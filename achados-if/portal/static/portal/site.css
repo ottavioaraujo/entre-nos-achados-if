@@ -223,15 +223,15 @@ html[data-theme="suap"] .landing-body .landing-final{background:#e6e6e6}
 
 /* Expanding-circle page transition adapted from the supplied loading reference. */
 .no-scroll-transition{overflow:hidden}
-.transition{position:fixed;inset:0;z-index:10000;width:100vw;height:100vh;height:100dvh;overflow:hidden;pointer-events:auto;animation:transition-failsafe .45s 4.8s forwards}
+.transition{position:fixed;inset:0;z-index:10000;width:100vw;height:100vh;height:100dvh;overflow:hidden;pointer-events:auto;animation:transition-failsafe .45s 3.8s forwards}
 .transition-content{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
-.transition-bg{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;width:max(280vw,110vh);height:max(280vw,110vh);border-radius:50%;background:#f7f6f2;will-change:transform}
+.transition-bg{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;width:145vmax;height:145vmax;border-radius:50%;background:#f7f6f2;will-change:transform}
 .transition-text-wrap{position:absolute;top:50%;left:50%;display:flex;width:100vw;height:1.2em;align-items:center;justify-content:center;overflow:hidden;transform:translate(-50%,-50%);font-size:clamp(3.1rem,12.5vw,12rem);white-space:nowrap}
 .page-transition-text{display:block;min-width:5.7em;overflow:visible;color:#171715;font-family:"Anton",Impact,"Haettenschweiler","Arial Narrow",sans-serif;font-size:inherit;font-weight:900;line-height:1.08;text-align:center;text-transform:uppercase;white-space:pre;will-change:transform,opacity}
 @keyframes transition-failsafe{to{opacity:0;visibility:hidden;pointer-events:none}}
 html[data-theme="suap"] .transition-bg{background:#0a7f70}
 html[data-theme="suap"] .page-transition-text{color:#fff}
-@media(max-width:767px){.transition-text-wrap{font-size:15vw}.page-transition-text{min-width:5.4em}.transition-bg{width:max(280vw,110vh);height:max(280vw,110vh)}}
+@media(max-width:767px){.transition-text-wrap{font-size:15vw}.page-transition-text{min-width:5.4em}.transition-bg{width:145vmax;height:145vmax}}
 @media(prefers-reduced-motion:reduce){.transition{animation:transition-failsafe .01s forwards}.transition-bg,.page-transition-text{will-change:auto}}
 @media(max-width:760px){
   html.landing-scroll{scroll-snap-type:y proximity}
@@ -280,3 +280,65 @@ html[data-theme="suap"] .page-transition-text{color:#fff}
   .landing-final .cta-actions{flex-direction:column;align-items:stretch}
 }
 @media(prefers-reduced-motion:reduce){html.landing-scroll{scroll-behavior:auto;scroll-snap-type:none}.landing-hero .hero-campus-photo,.landing-hero .hero-copy,.scroll-cue-icon{animation:none}}
+
+/* Comments stay inside each notice and remain collapsed until requested. */
+.item-comments{margin-top:15px;border-top:1px solid var(--line);padding-top:10px}
+.item-comments summary{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;list-style:none;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.item-comments summary::-webkit-details-marker{display:none}
+.item-comments summary:after{content:"+";font-size:16px;font-weight:400}
+.item-comments[open] summary:after{content:"−"}
+.item-comments summary span{margin-left:auto;color:var(--muted);font-weight:500}
+.item-comments-content{padding-top:12px}
+.comment-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.comment-list li{border-left:2px solid var(--line);padding:2px 0 2px 10px}
+.comment-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.comment-heading strong{font-size:9px}
+.comment-heading time{font-size:8px;color:var(--muted)}
+.comment-list li p{min-height:0!important;margin:4px 0 0!important;font-size:10px!important;line-height:1.55!important;overflow-wrap:anywhere}
+.comment-empty{min-height:0!important;margin:0 0 10px!important;font-size:9px!important;color:var(--muted)}
+.comment-form{display:grid;gap:6px;margin-top:12px}
+.comment-form label{font-size:8px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.comment-form label span{font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)}
+.comment-form input,.comment-form textarea{width:100%;padding:8px;border:1px solid var(--line);background:#fff;color:var(--ink);font:10px var(--sans);outline-color:var(--accent)}
+.comment-form textarea{min-height:55px;resize:vertical}
+.comment-form .small-action{justify-self:start;margin-top:2px}
+.comment-honeypot{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important}
+.pagination{display:flex;justify-content:center;align-items:center;gap:18px;margin-top:26px;font-size:10px}
+.pagination a,.pagination .disabled{border:1px solid var(--line);padding:10px 13px}
+.pagination a:hover{border-color:var(--accent);color:var(--accent)}
+.pagination .disabled{color:var(--muted);opacity:.55}
+html[data-theme="suap"] .item-comments{border-color:#D9D9D9}
+html[data-theme="suap"] .comment-list li{border-color:#0A7F70}
+html[data-theme="suap"] .comment-form input,html[data-theme="suap"] .comment-form textarea{border-color:#B3B3B3;border-radius:8px}
+html[data-theme="suap"] .pagination a{border-color:#B3B3B3;border-radius:9px}
+@media(max-width:430px){.pagination{gap:8px;font-size:9px}.pagination a,.pagination .disabled{padding:9px 8px}.comment-heading{align-items:flex-start;flex-direction:column;gap:2px}}
+
+/* Rounded surfaces for the SUAP theme. */
+html[data-theme="suap"] .button,
+html[data-theme="suap"] .filter-button,
+html[data-theme="suap"] .theme-picker select,
+html[data-theme="suap"] .small-action{border-radius:10px}
+html[data-theme="suap"] .theme-picker select{border-color:#B3B3B3}
+html[data-theme="suap"] .filter-button{border-width:1px}
+html[data-theme="suap"] .search,
+html[data-theme="suap"] .select,
+html[data-theme="suap"] .field input,
+html[data-theme="suap"] .field select,
+html[data-theme="suap"] .field textarea{border:1px solid #B3B3B3;border-radius:9px}
+html[data-theme="suap"] .board-page .board-section,
+html[data-theme="suap"] .listing,
+html[data-theme="suap"] .account-form-panel,
+html[data-theme="suap"] .account-note,
+html[data-theme="suap"] .metric-card,
+html[data-theme="suap"] .table-wrap,
+html[data-theme="suap"] .login-card{border:1px solid #D9D9D9;border-radius:16px}
+html[data-theme="suap"] .landing-body .story-inner,
+html[data-theme="suap"] .landing-body .landing-cta,
+html[data-theme="suap"] .landing-final-inner{border:1px solid #D9D9D9;border-radius:18px;background:#fff;box-shadow:0 5px 18px rgba(26,26,26,.06)}
+html[data-theme="suap"] .landing-body .story-inner{padding:34px}
+html[data-theme="suap"] .landing-final-inner{width:min(100%,850px);padding:clamp(28px,6vw,56px)}
+html[data-theme="suap"] .landing-body .landing-stats{background:#F2F2F2}
+html[data-theme="suap"] .landing-body .landing-how .step{border:1px solid rgba(255,255,255,.24);border-radius:14px;padding:22px}
+html[data-theme="suap"] .modal{border-radius:20px}
+html[data-theme="suap"] .status{border-radius:999px}
+@media(max-width:760px){html[data-theme="suap"] .landing-body .story-inner{padding:22px}html[data-theme="suap"] .landing-body .landing-how .step{padding:17px}}
