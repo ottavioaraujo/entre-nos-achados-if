@@ -1,0 +1,28 @@
+<details class="item-comments" id="comments-{{ item.pk }}">
+  <summary>Comentários <span>{{ item.comment_count|default:0 }}</span></summary>
+  <div class="item-comments-content">
+    {% if item.comment_count %}
+      <ul class="comment-list">
+        {% for comment in item.comments.all %}
+          <li>
+            <div class="comment-heading"><strong>{{ comment.author|default:"Comunidade" }}</strong><time datetime="{{ comment.created_at|date:'c' }}">{{ comment.created_at|date:"d/m/Y · H:i" }}</time></div>
+            <p>{{ comment.body|linebreaksbr }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="comment-empty">Ainda não há comentários neste aviso.</p>
+    {% endif %}
+    {% if not item.is_resolved %}
+      <form class="comment-form" method="post" action="{% url 'portal:publish_comment' item.pk %}">
+        {% csrf_token %}
+        <div class="comment-honeypot" aria-hidden="true">{{ item.comment_form.website }}</div>
+        <label for="{{ item.comment_form.author.id_for_label }}">Seu nome <span>(opcional)</span></label>
+        {{ item.comment_form.author }}
+        <label for="{{ item.comment_form.body.id_for_label }}">Escreva um comentário</label>
+        {{ item.comment_form.body }}
+        <button class="small-action" type="submit">Comentar</button>
+      </form>
+    {% endif %}
+  </div>
+</details>
