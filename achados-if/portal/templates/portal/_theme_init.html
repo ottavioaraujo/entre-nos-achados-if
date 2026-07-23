@@ -1,7 +1,16 @@
 <script>
+let initialTheme = "suap";
 try {
-  if (localStorage.getItem("entre-nos-theme") === "suap") {
-    document.documentElement.dataset.theme = "suap";
-  }
+  initialTheme = localStorage.getItem("entre-nos-theme") || "suap";
 } catch (_error) {}
+if (initialTheme === "suap") {
+  document.documentElement.dataset.theme = "suap";
+  const font = document.createElement("link");
+  font.rel = "preload";
+  font.as = "style";
+  font.href = "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap";
+  font.dataset.suapFont = "true";
+  font.onload = () => { font.onload = null; font.rel = "stylesheet"; };
+  document.head.append(font);
+}
 </script>
