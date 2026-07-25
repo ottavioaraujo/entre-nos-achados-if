@@ -1,13 +1,24 @@
-<label class="theme-picker"><span>Tema</span><select id="siteThemeChoice" aria-label="Escolher tema visual"><option value="current">Atual</option><option value="suap">SUAP</option></select></label>
+<label class="theme-picker"><span>Tema</span><select id="siteThemeChoice" aria-label="Escolher tema visual"><option value="suap">SUAP</option><option value="current">Atual</option></select></label>
 <script>
 (() => {
   const picker = document.getElementById("siteThemeChoice");
   if (!picker) return;
-  let savedTheme = "current";
-  try { savedTheme = localStorage.getItem("entre-nos-theme") || "current"; } catch (_error) {}
+  let savedTheme = "suap";
+  try { savedTheme = localStorage.getItem("entre-nos-theme") || "suap"; } catch (_error) {}
+  const ensureSuapFont = () => {
+    if (document.querySelector("link[data-suap-font]")) return;
+    const font = document.createElement("link");
+    font.rel = "stylesheet";
+    font.href = "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap";
+    font.dataset.suapFont = "true";
+    document.head.append(font);
+  };
   const applyTheme = (theme, save = false) => {
     const selected = theme === "suap" ? "suap" : "current";
-    if (selected === "suap") document.documentElement.dataset.theme = "suap";
+    if (selected === "suap") {
+      document.documentElement.dataset.theme = "suap";
+      ensureSuapFont();
+    }
     else delete document.documentElement.dataset.theme;
     picker.value = selected;
     if (save) {
