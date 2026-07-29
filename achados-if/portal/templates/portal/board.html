@@ -4,11 +4,26 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f7f6f2">
-  <title>Mural do campus — Entre Nós</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <title>Mural de achados e perdidos do IFRN | Entre Nós</title>
+  <meta name="description" content="Consulte o mural público de itens perdidos e encontrados no campus do IFRN. Pesquise por item, categoria ou local e ajude a comunidade a encontrar o que procura.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://entre-nos-achados-if.vercel.app/mural/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Entre Nós">
+  <meta property="og:title" content="Mural de achados e perdidos do IFRN | Entre Nós">
+  <meta property="og:description" content="Consulte itens perdidos e encontrados no campus do IFRN e publique um aviso para ajudar a comunidade.">
+  <meta property="og:url" content="https://entre-nos-achados-if.vercel.app/mural/">
+  <meta property="og:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/campus-principal.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Mural de achados e perdidos do IFRN | Entre Nós">
+  <meta name="twitter:description" content="Consulte itens perdidos e encontrados no campus do IFRN.">
+  <meta name="twitter:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/campus-principal.jpg">
+  <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"CollectionPage","name":"Mural de achados e perdidos do IFRN","url":"https://entre-nos-achados-if.vercel.app/mural/","inLanguage":"pt-BR","isPartOf":{"@type":"WebSite","name":"Entre Nós","url":"https://entre-nos-achados-if.vercel.app/"}}
+  </script>
+  {% include 'portal/_font_assets.html' %}
   {% include 'portal/_theme_init.html' %}
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'portal/site.css' %}">
 </head>
 <body class="board-page">
@@ -28,7 +43,33 @@
         <input type="hidden" name="tipo" value="{{ kind_filter }}"><button class="filter-button active" type="submit">Buscar</button>
       </form>
       <div class="tabs" aria-label="Filtrar tipo de aviso"><a class="filter-button {% if kind_filter == 'all' %}active{% endif %}" href="{% url 'portal:board' %}?tipo=all">Todos</a><a class="filter-button {% if kind_filter == 'lost' %}active{% endif %}" href="{% url 'portal:board' %}?tipo=lost">Perdidos</a><a class="filter-button {% if kind_filter == 'found' %}active{% endif %}" href="{% url 'portal:board' %}?tipo=found">Encontrados</a></div>
-      <div class="listing-grid">{% for item in items %}<article class="listing"><div class="listing-photo">{% if item.photo %}<img src="{{ item.photo.url }}" alt="Foto de {{ item.name }}">{% else %}<div class="placeholder" aria-hidden="true">{% if item.category == 'eletronicos' %}🎧{% elif item.category == 'chaves_documentos' %}🔑{% elif item.category == 'material_escolar' %}✏️{% elif item.category == 'roupas_acessorios' %}🧥{% else %}🎒{% endif %}</div>{% endif %}<span class="status {{ item.kind }}">{{ item.get_kind_display }}</span></div><div class="listing-body"><span class="listing-category">{{ item.get_category_display }}</span><h2>{{ item.name }}</h2><p>{{ item.description }}</p><div class="listing-meta"><span>Local: <strong>{{ item.location }}</strong></span><span>{{ item.event_date|date:"d/m/Y" }}</span></div><div class="listing-footer"><a class="button whatsapp" href="{{ item.whatsapp_url }}" target="_blank" rel="noopener noreferrer">Chamar no WhatsApp ↗</a></div></div></article>{% empty %}<div class="empty-state">Nenhum aviso encontrado. Cadastre um item perdido ou encontrado.</div>{% endfor %}</div>
+      <div class="listing-grid">
+        {% for item in items %}
+          <article class="listing" id="item-{{ item.pk }}">
+            <div class="listing-photo">
+              {% if item.photo_data %}<img src="{% url 'portal:item_photo' item.pk %}" alt="Foto de {{ item.name }}" loading="lazy" decoding="async">
+              {% elif item.photo %}<img src="{{ item.photo.url }}" alt="Foto de {{ item.name }}" loading="lazy" decoding="async">
+              {% else %}<div class="placeholder" aria-hidden="true">{% if item.category == 'eletronicos' %}🎧{% elif item.category == 'chaves_documentos' %}🔑{% elif item.category == 'material_escolar' %}✏️{% elif item.category == 'roupas_acessorios' %}🧥{% else %}🎒{% endif %}</div>{% endif %}
+              <span class="status {{ item.kind }}">{{ item.get_kind_display }}</span>
+            </div>
+            <div class="listing-body">
+              <span class="listing-category">{{ item.get_category_display }}</span>
+              <h2>{{ item.name }}</h2>
+              <p>{{ item.description }}</p>
+              <div class="listing-meta"><span>Local: <strong>{{ item.location }}</strong></span><span>{% if item.event_period %}{{ item.get_event_period_display }}{% else %}{{ item.event_date|date:"d/m/Y" }}{% endif %}</span></div>
+              <div class="listing-footer"><a class="button whatsapp" href="{{ item.whatsapp_url }}" target="_blank" rel="noopener noreferrer">Chamar no WhatsApp ↗</a></div>
+              {% include 'portal/_item_comments.html' with item=item %}
+            </div>
+          </article>
+        {% empty %}<div class="empty-state">Nenhum aviso encontrado. Cadastre um item perdido ou encontrado.</div>{% endfor %}
+      </div>
+      {% if page_obj.paginator.num_pages > 1 %}
+        <nav class="pagination" aria-label="Paginação dos avisos">
+          {% if page_obj.has_previous %}<a href="?{% if pagination_query %}{{ pagination_query }}&amp;{% endif %}page={{ page_obj.previous_page_number }}" rel="prev">← Anterior</a>{% else %}<span class="disabled">← Anterior</span>{% endif %}
+          <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+          {% if page_obj.has_next %}<a href="?{% if pagination_query %}{{ pagination_query }}&amp;{% endif %}page={{ page_obj.next_page_number }}" rel="next">Próxima →</a>{% else %}<span class="disabled">Próxima →</span>{% endif %}
+        </nav>
+      {% endif %}
     </section>
   </main>
   <footer class="footer"><div class="footer-inner"><div><a class="footer-logo" href="{% url 'portal:index' %}">ENTRE NÓS</a><p>Uma iniciativa para aproximar pessoas e objetos no campus.</p></div><div class="footer-links"><a href="{% url 'portal:index' %}">Voltar à página inicial</a><button class="footer-action" type="button" data-open-item-modal data-kind="lost">Cadastrar item</button></div></div></footer>
