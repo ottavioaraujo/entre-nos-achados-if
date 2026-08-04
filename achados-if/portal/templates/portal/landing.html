@@ -4,12 +4,31 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f7f6f2">
-  <title>Entre Nós — Achados e Perdidos do Campus</title>
-  <meta name="description" content="Uma comunidade para ajudar objetos perdidos e encontrados a voltar para casa.">
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <title>Achados e perdidos do IFRN | Entre Nós</title>
+  <meta name="description" content="Encontre objetos perdidos no campus do IFRN ou publique um aviso de item perdido ou encontrado. Uma iniciativa da comunidade para facilitar reencontros.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://entre-nos-achados-if.vercel.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Entre Nós">
+  <meta property="og:title" content="Achados e perdidos do IFRN | Entre Nós">
+  <meta property="og:description" content="Encontre objetos perdidos no campus do IFRN ou publique um aviso de item perdido ou encontrado.">
+  <meta property="og:url" content="https://entre-nos-achados-if.vercel.app/">
+  <meta property="og:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/campus-principal.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1600">
+  <meta property="og:image:height" content="900">
+  <meta property="og:image:alt" content="Estudantes do IFRN mostrando um item encontrado no campus">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Achados e perdidos do IFRN | Entre Nós">
+  <meta name="twitter:description" content="Encontre objetos perdidos no campus do IFRN ou publique um aviso.">
+  <meta name="twitter:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/campus-principal.jpg">
+  <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebSite","name":"Entre Nós","url":"https://entre-nos-achados-if.vercel.app/","inLanguage":"pt-BR","description":"Plataforma comunitária de achados e perdidos do campus do IFRN.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://entre-nos-achados-if.vercel.app/mural/?q={search_term_string}"},"query-input":"required name=search_term_string"}}
+  </script>
+  <link rel="preload" as="image" href="{% static 'portal/demo-items/campus-principal.jpg' %}" fetchpriority="high">
+  {% include 'portal/_font_assets.html' %}
   {% include 'portal/_theme_init.html' %}
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'portal/site.css' %}">
 </head>
 <body class="landing-body">
@@ -30,7 +49,7 @@
   </header>
   <main>
     <section class="landing-hero" id="inicio" aria-labelledby="hero-title" data-landing-step>
-      <img class="hero-campus-photo" src="{% static 'portal/demo-items/campus-principal.jpg' %}" alt="Estudantes do IFRN mostrando um item encontrado na sala de aula" fetchpriority="high">
+      <img class="hero-campus-photo" src="{% static 'portal/demo-items/campus-principal.jpg' %}" alt="Estudantes do IFRN mostrando um item encontrado na sala de aula" width="1600" height="900" decoding="async" fetchpriority="high">
       <div class="hero-photo-shade" aria-hidden="true"></div>
       <div class="hero-copy">
         <span class="eyebrow">Um campus, muitas histórias</span>
