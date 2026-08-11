@@ -1,5 +1,6 @@
 import json
 import logging
+import mimetypes
 import re
 import secrets
 from base64 import b64encode
@@ -12,18 +13,55 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.files.storage import default_storage
-from django.db.models import Count, Q
-from django.http import HttpResponseBadRequest, JsonResponse
+from django.core.paginator import Paginator
+from django.db.models import Count, Prefetch, Q
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
-from .forms import CampusItemForm
-from .models import CampusItem
+from .forms import CampusItemCommentForm, CampusItemForm
+from .models import CampusItem, CampusItemComment
 
 
 logger = logging.getLogger(__name__)
+
+
+def _store_uploaded_photo(item, uploaded_photo):
+    """Keep uploads in the database because Vercel's function disk is read-only."""
+    if not uploaded_photo:
+        return
+    content_type = {
+        "JPEG": "image/jpeg",
+        "PNG": "image/png",
+        "GIF": "image/gif",
+        "WEBP": "image/webp",
+    }.get(uploaded_photo.image.format)
+    if not content_type:
+        raise ValueError("Unsupported image format")
+    uploaded_photo.seek(0)
+    item.photo_data = uploaded_photo.read()
+    item.photo_content_type = content_type
+
+
+def _seo_resource(filename, content_type):
+    resource = settings.BASE_DIR / "seo" / filename
+    response = HttpResponse(resource.read_text(encoding="utf-8"), content_type=f"{content_type}; charset=utf-8")
+    response["Cache-Control"] = "public, max-age=3600"
+    return response
+
+
+def robots_txt(request):
+    return _seo_resource("robots.txt", "text/plain")
+
+
+def sitemap_xml(request):
+    return _seo_resource("sitemap.xml", "application/xml")
+
+
+def llms_txt(request):
+    return _seo_resource("llms.txt", "text/plain")
 
 
 def index(request):
@@ -63,8 +101,19 @@ def board(request):
         found=Count("id", filter=Q(kind=CampusItem.Kind.FOUND)),
     )
 
+    items = items.annotate(comment_count=Count("comments")).prefetch_related(
+        Prefetch("comments", queryset=CampusItemComment.objects.order_by("created_at"))
+    ).order_by("-created_at", "-pk")
+    page_obj = Paginator(items, 18).get_page(request.GET.get("page"))
+    for item in page_obj.object_list:
+        item.comment_form = CampusItemCommentForm(prefix=f"item-{item.pk}")
+    pagination_params = request.GET.copy()
+    pagination_params.pop("page", None)
+
     return render(request, "portal/board.html", {
-        "items": items,
+        "items": page_obj.object_list,
+        "page_obj": page_obj,
+        "pagination_query": pagination_params.urlencode(),
         "totals": totals,
         "form": CampusItemForm(initial={"kind": request.GET.get("tipo", CampusItem.Kind.LOST)}),
         "demo_login_enabled": False,
@@ -83,6 +132,7 @@ def publish_item(request):
     if form.is_valid():
         item = form.save(commit=False)
         item.reporter = request.user.pk if request.user.is_authenticated else None
+        _store_uploaded_photo(item, form.cleaned_data.get("photo_upload"))
         item.save()
         if wants_json:
             return JsonResponse({
@@ -102,6 +152,45 @@ def publish_item(request):
         }, status=422)
     messages.error(request, "Confira os dados do aviso e tente novamente.")
     return redirect("portal:board")
+
+
+def item_photo(request, pk):
+    item = get_object_or_404(CampusItem, pk=pk)
+    if item.photo_data:
+        response = HttpResponse(item.photo_data, content_type=item.photo_content_type or "application/octet-stream")
+    elif item.photo:
+        try:
+            with default_storage.open(item.photo.name, "rb") as uploaded_photo:
+                content_type = mimetypes.guess_type(item.photo.name)[0] or "application/octet-stream"
+                response = HttpResponse(uploaded_photo.read(), content_type=content_type)
+        except (OSError, ValueError):
+            return HttpResponse(status=404)
+    else:
+        return HttpResponse(status=404)
+    response["X-Content-Type-Options"] = "nosniff"
+    response["Cache-Control"] = "public, max-age=3600"
+    return response
+
+
+@require_POST
+def publish_comment(request, pk):
+    item = get_object_or_404(CampusItem, pk=pk, is_resolved=False)
+    form = CampusItemCommentForm(request.POST, prefix=f"item-{item.pk}")
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.item = item
+        comment.save()
+        messages.success(request, "Comentário publicado.")
+    else:
+        messages.error(request, "Não foi possível publicar. Escreva um comentário de até 500 caracteres.")
+    referer = request.META.get("HTTP_REFERER", "")
+    if not url_has_allowed_host_and_scheme(
+        referer,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        referer = reverse("portal:board")
+    return redirect(f"{referer.split('#', 1)[0]}#item-{item.pk}")
 
 
 def suap_login(request):
@@ -285,10 +374,17 @@ def _revoke_suap_token(access_token):
 
 @login_required
 def account(request):
+    items = CampusItem.objects.filter(reporter=request.user.pk).annotate(
+        comment_count=Count("comments")
+    ).prefetch_related(
+        Prefetch("comments", queryset=CampusItemComment.objects.order_by("created_at"))
+    )
+    for item in items:
+        item.comment_form = CampusItemCommentForm(prefix=f"item-{item.pk}")
     return render(request, "portal/account.html", {
         "form": CampusItemForm(initial={"kind": CampusItem.Kind.LOST}),
         "demo_login_enabled": False,
-        "items": CampusItem.objects.filter(reporter=request.user.pk),
+        "items": items,
     })
 
 
@@ -314,7 +410,8 @@ def management(request):
 
     # reporter is stored as a user ID (BigIntegerField) for TiDB compatibility,
     # so resolve names explicitly instead of using select_related.
-    items = list(items)
+    page_obj = Paginator(items.order_by("-created_at", "-pk"), 50).get_page(request.GET.get("page"))
+    items = list(page_obj.object_list)
     reporter_ids = {item.reporter for item in items if item.reporter}
     reporters = get_user_model().objects.in_bulk(reporter_ids)
     for item in items:
@@ -323,6 +420,8 @@ def management(request):
             reporter.get_full_name() or reporter.username
             if reporter else ("Conta removida" if item.reporter else "Comunidade")
         )
+    pagination_params = request.GET.copy()
+    pagination_params.pop("page", None)
 
     totals = CampusItem.objects.aggregate(
         total=Count("id"),
@@ -332,6 +431,8 @@ def management(request):
     )
     return render(request, "portal/management.html", {
         "items": items,
+        "page_obj": page_obj,
+        "pagination_query": pagination_params.urlencode(),
         "totals": totals,
         "status_filter": status,
         "kind_filter": kind,
@@ -346,7 +447,9 @@ def edit_item(request, pk):
     if request.method == "POST":
         form = CampusItemForm(request.POST, request.FILES, instance=item)
         if form.is_valid():
-            form.save()
+            item = form.save(commit=False)
+            _store_uploaded_photo(item, form.cleaned_data.get("photo_upload"))
+            item.save()
             messages.success(request, "Aviso atualizado.")
             return redirect("portal:management")
     return render(request, "portal/item_edit.html", {"item": item, "form": form})
@@ -369,7 +472,10 @@ def delete_item(request, pk):
     photo_name = item.photo.name if item.photo else ""
     item.delete()
     if photo_name:
-        default_storage.delete(photo_name)
+        try:
+            default_storage.delete(photo_name)
+        except (OSError, ValueError):
+            logger.info("Legacy photo cleanup skipped for item %s", pk)
     messages.success(request, "Aviso removido do mural.")
     return redirect("portal:management")
 
