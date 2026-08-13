@@ -1,0 +1,19 @@
+# Entre Nós — Achados e Perdidos do Campus
+
+> Plataforma comunitária do IFRN para consultar avisos de itens perdidos e encontrados e facilitar a devolução de objetos no campus.
+
+## Páginas públicas
+
+- [Página inicial](https://entre-nos-achados-if.vercel.app/): apresentação do projeto e instruções para participar.
+- [Mural público](https://entre-nos-achados-if.vercel.app/mural/): avisos ativos de itens perdidos e encontrados.
+
+## Sobre o conteúdo
+
+- A comunidade pode publicar avisos de itens perdidos ou encontrados.
+- Os registros podem incluir descrição, local aproximado, foto e um contato para combinar a devolução.
+- Os avisos são enviados por usuários e não representam comunicados oficiais do IFRN.
+- Para confirmar detalhes ou combinar uma entrega, use o contato indicado no próprio aviso.
+
+## Áreas privadas
+
+- Contas, gestão, autenticação e administração não são conteúdo público para indexação.
