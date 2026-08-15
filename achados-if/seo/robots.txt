@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /conta/
+Disallow: /gestao/
+Disallow: /itens/publicar/
+
+Sitemap: https://entre-nos-achados-if.vercel.app/sitemap.xml
