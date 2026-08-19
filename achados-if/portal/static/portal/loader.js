@@ -4,6 +4,17 @@
   const texts = Array.from(document.querySelectorAll(".page-transition-text"));
   if (!overlay || !background || texts.length < 2) return;
 
+  const introKey = "entreNosWelcomePlayed";
+  try {
+    if (window.sessionStorage.getItem(introKey) === "yes") {
+      overlay.style.display = "none";
+      return;
+    }
+    window.sessionStorage.setItem(introKey, "yes");
+  } catch (_) {
+    // Continue with this one animation when session storage is unavailable.
+  }
+
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (reduceMotion || typeof background.animate !== "function") {
     overlay.style.display = "none";
@@ -34,15 +45,15 @@
       text.classList.contains("is-welcome")
         ? [{ transform: "translateX(calc(52vw + 50%))" }, { transform: "translateX(0)" }]
         : [{ transform: "translateX(0)" }, { transform: "translateX(calc(-52vw - 50%))" }],
-      { duration: 1900, easing, fill: "forwards" }
+      { duration: 760, easing, fill: "forwards" }
     )
   );
   const backgroundAnimation = background.animate(
     [{ transform: "scale(1)" }, { transform: "scale(0)" }],
-    { duration: 600, delay: 2400, easing: "ease", fill: "forwards" }
+    { duration: 350, delay: 1100, easing: "ease", fill: "forwards" }
   );
 
   animations = [...textAnimations, backgroundAnimation];
-  safetyTimer = window.setTimeout(finish, 4200);
+  safetyTimer = window.setTimeout(finish, 1650);
   backgroundAnimation.finished.then(finish).catch(finish);
 })();
