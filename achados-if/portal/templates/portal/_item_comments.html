@@ -1,4 +1,4 @@
-<details class="item-comments" id="comments-{{ item.pk }}">
+<details class="item-comments" id="comments-{{ item.pk }}" {% if comments_expanded %}open{% endif %}>
   <summary>Comentários <span>{{ item.comment_count|default:0 }}</span></summary>
   <div class="item-comments-content">
     {% if item.comment_count %}
