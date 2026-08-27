@@ -46,19 +46,18 @@
       <div class="listing-grid">
         {% for item in items %}
           <article class="listing" id="item-{{ item.pk }}">
-            <div class="listing-photo">
+            <a class="listing-photo listing-detail-link" href="{% url 'portal:item_detail' item.pk %}" aria-label="Ver anúncio de {{ item.name }}">
               {% if item.photo_data %}<img src="{% url 'portal:item_photo' item.pk %}" alt="Foto de {{ item.name }}" loading="lazy" decoding="async">
               {% elif item.photo %}<img src="{{ item.photo.url }}" alt="Foto de {{ item.name }}" loading="lazy" decoding="async">
               {% else %}<div class="placeholder" aria-hidden="true">{% if item.category == 'eletronicos' %}🎧{% elif item.category == 'chaves_documentos' %}🔑{% elif item.category == 'material_escolar' %}✏️{% elif item.category == 'roupas_acessorios' %}🧥{% else %}🎒{% endif %}</div>{% endif %}
               <span class="status {{ item.kind }}">{{ item.get_kind_display }}</span>
-            </div>
+            </a>
             <div class="listing-body">
               <span class="listing-category">{{ item.get_category_display }}</span>
-              <h2>{{ item.name }}</h2>
+              <h2><a class="listing-title-link" href="{% url 'portal:item_detail' item.pk %}">{{ item.name }}</a></h2>
               <p>{{ item.description }}</p>
               <div class="listing-meta"><span>Local: <strong>{{ item.location }}</strong></span><span>{% if item.event_period %}{{ item.get_event_period_display }}{% else %}{{ item.event_date|date:"d/m/Y" }}{% endif %}</span></div>
-              <div class="listing-footer"><a class="button whatsapp" href="{{ item.whatsapp_url }}" target="_blank" rel="noopener noreferrer">Chamar no WhatsApp ↗</a></div>
-              {% include 'portal/_item_comments.html' with item=item %}
+              <div class="listing-footer"><a class="button listing-detail-button" href="{% url 'portal:item_detail' item.pk %}">Ver anúncio · comentários ({{ item.comment_count }})</a><a class="button whatsapp" href="{{ item.whatsapp_url }}" target="_blank" rel="noopener noreferrer">Chamar no WhatsApp ↗</a></div>
             </div>
           </article>
         {% empty %}<div class="empty-state">Nenhum aviso encontrado. Cadastre um item perdido ou encontrado.</div>{% endfor %}
