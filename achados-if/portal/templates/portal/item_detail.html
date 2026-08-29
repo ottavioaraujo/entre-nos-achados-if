@@ -1,0 +1,62 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f6f2">
+  <title>{{ item.name }} · Achados do campus | Entre Nós</title>
+  <meta name="description" content="Aviso de item {{ item.get_kind_display|lower }} no campus: {{ item.name }}. Veja a foto, os detalhes e os comentários da comunidade.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  {% url 'portal:item_detail' item.pk as item_path %}
+  <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ item_path }}">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Entre Nós">
+  <meta property="og:title" content="{{ item.name }} · Entre Nós">
+  <meta property="og:description" content="{{ item.description }} · {{ item.location }}">
+  <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ item_path }}">
+  {% if item.photo_data or item.photo %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% url 'portal:item_photo' item.pk %}">{% endif %}
+  {% include 'portal/_font_assets.html' %}
+  {% include 'portal/_theme_init.html' %}
+  <link rel="stylesheet" href="{% static 'portal/site.css' %}">
+</head>
+<body class="item-detail-page">
+  {% include 'portal/_page_loader.html' %}
+  <div class="topline">Aviso da comunidade · Achados e perdidos do campus</div>
+  <header class="header">
+    <div class="header-main">
+      <div class="campus-label">Consulta pública<br>Comunidade do IF</div>
+      <a class="logo" href="{% url 'portal:index' %}">ENTRE NÓS<small>ACHADOS DO CAMPUS</small></a>
+      <div class="header-actions">
+        {% include 'portal/_theme_switcher.html' %}
+        <a class="button outline" href="{% url 'portal:board' %}">Voltar ao mural</a>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Navegação principal"><a href="{% url 'portal:index' %}">Início</a><a href="{% url 'portal:board' %}">Mural</a><button class="nav-action" type="button" data-open-item-modal data-kind="lost">Cadastrar item</button></nav>
+  </header>
+  <main class="wrap item-detail-wrap">
+    {% if messages %}<div class="messages">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}
+    <a class="item-back-link" href="{% url 'portal:board' %}">← Voltar para os avisos</a>
+    <article class="item-detail" id="item-{{ item.pk }}">
+      <div class="item-detail-photo">
+        {% if item.photo_data or item.photo %}<img src="{% url 'portal:item_photo' item.pk %}" alt="Foto de {{ item.name }}" fetchpriority="high" decoding="async">
+        {% else %}<div class="placeholder" aria-label="Este aviso não tem foto">{% if item.category == 'eletronicos' %}🎧{% elif item.category == 'chaves_documentos' %}🔑{% elif item.category == 'material_escolar' %}✏️{% elif item.category == 'roupas_acessorios' %}🧥{% else %}🎒{% endif %}</div>{% endif %}
+        <span class="status {{ item.kind }}">{{ item.get_kind_display }}</span>
+        {% if item.is_resolved %}<span class="status resolved">Resolvido</span>{% endif %}
+      </div>
+      <div class="item-detail-content">
+        <span class="eyebrow">{{ item.get_category_display }} · {% if item.event_period %}{{ item.get_event_period_display }}{% else %}{{ item.event_date|date:"d/m/Y" }}{% endif %}</span>
+        <h1>{{ item.name }}</h1>
+        <p class="item-detail-description">{{ item.description }}</p>
+        <dl class="item-detail-facts"><div><dt>Local</dt><dd>{{ item.location }}</dd></div><div><dt>Publicado</dt><dd><time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"d/m/Y · H:i" }}</time></dd></div></dl>
+        {% if item.whatsapp_url and not item.is_resolved %}<a class="button whatsapp item-detail-contact" href="{{ item.whatsapp_url }}" target="_blank" rel="noopener noreferrer">Conversar pelo WhatsApp ↗</a>{% endif %}
+        <section class="item-detail-discussion" aria-labelledby="discussion-title">
+          <div class="discussion-heading"><div><span class="eyebrow">Comunidade do campus</span><h2 id="discussion-title">Comentários</h2></div><span class="discussion-count">{{ item.comment_count }}</span></div>
+          {% include 'portal/_item_comments.html' with item=item comments_expanded=True %}
+        </section>
+      </div>
+    </article>
+  </main>
+  <footer class="footer"><div class="footer-inner"><div><a class="footer-logo" href="{% url 'portal:index' %}">ENTRE NÓS</a><p>Uma iniciativa para aproximar pessoas e objetos no campus.</p></div><div class="footer-links"><a href="{% url 'portal:board' %}">Voltar ao mural</a><button class="footer-action" type="button" data-open-item-modal data-kind="lost">Cadastrar item</button></div></div></footer>
+  {% include 'portal/_item_form_modal.html' %}
+</body>
+</html>
