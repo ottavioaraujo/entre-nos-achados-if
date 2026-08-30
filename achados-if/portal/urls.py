@@ -9,6 +9,7 @@ urlpatterns = [
     path("llms.txt", views.llms_txt, name="llms_txt"),
     path("", views.index, name="index"),
     path("mural/", views.board, name="board"),
+    path("itens/<int:pk>/", views.item_detail, name="item_detail"),
     path("itens/publicar/", views.publish_item, name="publish_item"),
     path("itens/<int:pk>/foto/", views.item_photo, name="item_photo"),
     path("itens/<int:pk>/comentarios/", views.publish_comment, name="publish_comment"),
