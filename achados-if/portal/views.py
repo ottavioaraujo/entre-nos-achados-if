@@ -101,12 +101,8 @@ def board(request):
         found=Count("id", filter=Q(kind=CampusItem.Kind.FOUND)),
     )
 
-    items = items.annotate(comment_count=Count("comments")).prefetch_related(
-        Prefetch("comments", queryset=CampusItemComment.objects.order_by("created_at"))
-    ).order_by("-created_at", "-pk")
+    items = items.annotate(comment_count=Count("comments")).order_by("-created_at", "-pk")
     page_obj = Paginator(items, 18).get_page(request.GET.get("page"))
-    for item in page_obj.object_list:
-        item.comment_form = CampusItemCommentForm(prefix=f"item-{item.pk}")
     pagination_params = request.GET.copy()
     pagination_params.pop("page", None)
 
@@ -122,6 +118,18 @@ def board(request):
         "query": query,
         "category_choices": CampusItem.Category.choices,
     })
+
+
+def item_detail(request, pk):
+    """Show one notice with its full image and community discussion."""
+    item = get_object_or_404(
+        CampusItem.objects.annotate(comment_count=Count("comments")).prefetch_related(
+            Prefetch("comments", queryset=CampusItemComment.objects.order_by("created_at"))
+        ),
+        pk=pk,
+    )
+    item.comment_form = CampusItemCommentForm(prefix=f"item-{item.pk}")
+    return render(request, "portal/item_detail.html", {"item": item})
 
 
 @require_POST
@@ -183,14 +191,7 @@ def publish_comment(request, pk):
         messages.success(request, "Comentário publicado.")
     else:
         messages.error(request, "Não foi possível publicar. Escreva um comentário de até 500 caracteres.")
-    referer = request.META.get("HTTP_REFERER", "")
-    if not url_has_allowed_host_and_scheme(
-        referer,
-        allowed_hosts={request.get_host()},
-        require_https=request.is_secure(),
-    ):
-        referer = reverse("portal:board")
-    return redirect(f"{referer.split('#', 1)[0]}#item-{item.pk}")
+    return redirect(f"{reverse('portal:item_detail', args=[item.pk])}#comments-{item.pk}")
 
 
 def suap_login(request):
@@ -374,13 +375,7 @@ def _revoke_suap_token(access_token):
 
 @login_required
 def account(request):
-    items = CampusItem.objects.filter(reporter=request.user.pk).annotate(
-        comment_count=Count("comments")
-    ).prefetch_related(
-        Prefetch("comments", queryset=CampusItemComment.objects.order_by("created_at"))
-    )
-    for item in items:
-        item.comment_form = CampusItemCommentForm(prefix=f"item-{item.pk}")
+    items = CampusItem.objects.filter(reporter=request.user.pk).annotate(comment_count=Count("comments"))
     return render(request, "portal/account.html", {
         "form": CampusItemForm(initial={"kind": CampusItem.Kind.LOST}),
         "demo_login_enabled": False,
