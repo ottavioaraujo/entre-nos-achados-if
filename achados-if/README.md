@@ -1,91 +1,50 @@
 # Entre Nós — Achados e Perdidos do Campus
 
-Portal de achados e perdidos do campus, feito em Django com MySQL. A landing page é a entrada do site; o mural público permite consultar e cadastrar itens sem conta em um formulário pop-up. O acesso SUAP segue disponível para usuários que querem acompanhar os próprios avisos; administradores têm um painel para moderar os registros.
+O **Entre Nós** aproxima estudantes e servidores que perderam ou encontraram objetos no campus do IFRN. A comunidade pode consultar o mural, publicar avisos e combinar a devolução dos itens.
 
-## Estrutura
+**Acessar o site:** [entre-nos-achados-if.vercel.app](https://entre-nos-achados-if.vercel.app)
+
+## O projeto publicado
+
+O site público é a aplicação oficial do projeto, desenvolvida em Django. O mural pode ser consultado e os avisos podem ser publicados sem criar uma conta. O acesso SUAP permite acompanhar os próprios registros, e a equipe autorizada dispõe de um painel de gestão.
+
+Entre os recursos disponíveis estão:
+
+- avisos de itens perdidos e encontrados com foto, local e período aproximado;
+- busca e filtros por categoria e tipo de aviso;
+- página própria para cada anúncio, com foto em destaque e comentários;
+- contato por WhatsApp com mensagem inicial preenchida;
+- autenticação institucional do SUAP e painel de gestão restrito;
+- layout adaptado para computadores e celulares.
+
+## Demonstração
+
+Há também uma cópia independente para apresentações, com banco local, itens de exemplo, fotos e acesso de teste. Essa demonstração não usa o SUAP nem compartilha o banco ou os registros do site publicado. O endereço acima sempre abre o projeto real.
+
+## Tecnologias
+
+- Python e Django
+- MySQL compatível com TiDB
+- OAuth2 do SUAP para autenticação institucional
+- Vercel para publicação
+
+## Estrutura do projeto
 
 ```text
-achados-if/
-├── config/                 # settings e URLs do projeto Django
-├── db/schema.sql           # cria o schema base para MySQL Workbench
-├── media/items/            # fotos enviadas, criadas em runtime
-├── portal/                 # modelos, formulário, views e admin
-│   ├── migrations/
-│   ├── static/portal/      # CSS
-│   └── templates/portal/   # mural, área do aluno e painel de gestão
-├── manage.py
-├── prototype-static.html  # versão HTML anterior, sem backend Django
-├── requirements.txt
-└── .env.example
+config/                     Configuração e rotas Django
+db/schema.sql               Estrutura inicial do banco MySQL
+portal/                     Modelos, formulários, views e painel administrativo
+portal/migrations/          Migrações do banco
+portal/static/portal/       CSS, JavaScript e imagens do site
+portal/templates/portal/    Páginas e componentes Django
+seo/                        Arquivos de indexação e descoberta do site
+manage.py                   Utilitário de gerenciamento Django
 ```
 
-## Banco MySQL / MySQL Workbench
+## Páginas principais
 
-1. Inicie o MySQL local e abra `db/schema.sql` no MySQL Workbench.
-2. Execute o script para criar o banco `entre_nos`.
-3. Copie `.env.example` para `.env` e preencha usuário, senha e host de conexão. Para XAMPP, confira se o serviço MySQL está ativo e ajuste as credenciais conforme sua instalação.
-4. O Django usa o driver `mysqlclient`. Instale dependências e aplique as migrations para criar as tabelas:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
-```
-
-Abra `http://127.0.0.1:8000/`. A aplicação cria a tabela `portal_campusitem` por migration. O arquivo SQL só cria o schema; mantenha o esquema das tabelas sob controle das migrations do Django.
-
-**Não abra `portal/templates/portal/index.html` diretamente como arquivo (`file://`).** Ele é um template Django: `{% static %}` precisa ser processado pelo servidor para apontar para `/static/portal/site.css`. Inicie o projeto com `python manage.py runserver` e acesse o endereço acima.
-
-Para executar sem um servidor MySQL disponível, defina `DB_ENGINE=sqlite` no `.env`; o Django usará um banco local `db.sqlite3`. Sem essa opção, o projeto usa MySQL por padrão.
-
-## Login SUAP e painel de gestão
-
-O login usa OAuth2 Authorization Code, seguindo a configuração indicada pelo [cliente Django oficial do IFRN](https://github.com/ifrn-oficial/cliente_suap_django). Cadastre uma aplicação confidencial na [área de APIs do SUAP do IFRN](https://suap.ifrn.edu.br/api/), habilite o grant `Authorization Code` e cadastre exatamente esta URL de retorno: `http://127.0.0.1:8000/auth/suap/callback/`. Depois preencha em `.env`:
-
-```env
-SUAP_BASE_URL=https://suap.ifrn.edu.br
-SUAP_CLIENT_ID=seu-client-id
-SUAP_CLIENT_SECRET=seu-client-secret
-SUAP_REDIRECT_URI=http://127.0.0.1:8000/auth/suap/callback/
-SUAP_ADMIN_IDS=matricula1,matricula2
-```
-
-O `client_secret` deve ficar somente no `.env` local, que não é versionado. Após entrar, alunos e servidores podem publicar e acompanhar os próprios avisos em `/conta/`. Apenas as matrículas listadas em `SUAP_ADMIN_IDS` (ou superusuários Django) acessam `/gestao/`, onde podem filtrar, editar, resolver, reabrir e excluir avisos. O access token do SUAP é usado para validar o perfil e não é persistido.
-
-## O que vai para o MySQL
-
-`CampusItem` guarda tipo (perdido/encontrado), nome, categoria, data, local, descrição, telefone, caminho da foto, estado de resolução e data de criação. O arquivo da foto fica em `media/`; o MySQL armazena apenas o caminho.
-
-Campos principais da tabela `portal_campusitem`:
-
-| Campo | Tipo | Uso |
-|---|---|---|
-| `kind` | `varchar(8)` | `lost` ou `found` |
-| `name` | `varchar(70)` | Nome do objeto |
-| `category` | `varchar(24)` | Categoria escolhida |
-| `event_date` | `date` | Dia aproximado em que foi perdido/encontrado |
-| `location` | `varchar(80)` | Local no campus |
-| `description` | `varchar(300)` | Detalhes do aviso |
-| `contact_phone` | `varchar(20)` | WhatsApp com DDD |
-| `photo` | `varchar(100)` | Caminho em `media/`, a imagem fica no disco |
-| `reporter_id` | `bigint` | Conta SUAP local que publicou, vazio para registros antigos |
-| `is_resolved` | `boolean` | Oculta avisos resolvidos do mural |
-| `created_at` | `datetime` | Data de publicação |
-
-## WhatsApp
-
-O número é validado e normalizado para código do país + DDD. `CampusItem.whatsapp_url` monta um link `wa.me` com mensagem específica de item perdido ou encontrado. A pessoa ainda confirma e envia a mensagem no WhatsApp.
-
-## Acesso às páginas
-
-- `/` — landing page.
-- `/mural/` — consulta pública e cadastro de avisos sem conta.
-- `/itens/publicar/` — envio do formulário pop-up de item perdido ou encontrado.
-- `/auth/suap/login/` — entrada pela conta institucional do SUAP.
-- `/conta/` — cadastro e acompanhamento dos próprios avisos, para usuários autenticados.
-- `/gestao/` — painel administrativo restrito às matrículas autorizadas.
-- `/admin/` — administração padrão do Django para superusuários e equipe autorizada.
-
-Antes de publicar em produção, configure HTTPS, mantenha `SECRET_KEY` e credenciais fora do repositório e defina a lista `SUAP_ADMIN_IDS` com as matrículas autorizadas.
+- `/` — apresentação do projeto;
+- `/mural/` — busca e publicação de avisos;
+- `/itens/<id>/` — detalhes, foto e comentários de um anúncio;
+- `/conta/` — área de quem entrou com SUAP;
+- `/gestao/` — painel de gestão para contas autorizadas.
