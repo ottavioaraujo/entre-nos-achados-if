@@ -2,11 +2,43 @@
 
 O Entre Nós aproxima quem perdeu um objeto de quem o encontrou. A comunidade pode consultar avisos, compartilhar informações sobre os itens e combinar a devolução.
 
-**Prévia visual:** [entre-nos no GitHub Pages](https://ottavioaraujo.github.io/entre-nos-achados-if/). Esta página apresenta o visual do projeto; os cadastros e a gestão ficam nas aplicações Django.
+**Site real:** [entre-nos-achados-if.vercel.app](https://entre-nos-achados-if.vercel.app/).
+
+**Prévia visual:** [Entre Nós no GitHub Pages](https://ottavioaraujo.github.io/entre-nos-achados-if/). A prévia apresenta o visual; cadastros e gestão ficam nas aplicações Django.
 
 ## Demonstração
 
 A pasta [`achados-if-demo`](achados-if-demo/) contém uma versão independente para apresentar e experimentar o portal. Ela vem com itens e fotos de exemplo, além de acessos de teste para conhecer a área do usuário e o painel administrativo.
+
+### Executar a demonstração localmente
+
+No macOS ou Linux, abra um terminal na pasta do repositório e execute:
+
+```bash
+cd achados-if-demo
+python3 -m venv .venv
+source .venv/bin/activate
+cp .env.example .env
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py setup_demo
+python manage.py runserver 127.0.0.1:8001
+```
+
+No Windows, use o PowerShell:
+
+```powershell
+cd achados-if-demo
+py -m venv .venv
+.venv\Scripts\Activate.ps1
+Copy-Item .env.example .env
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py setup_demo
+python manage.py runserver 127.0.0.1:8001
+```
+
+Abra [http://127.0.0.1:8001/](http://127.0.0.1:8001/) para ver a apresentação. O mural fica em `/mural/` e o acesso de teste em `/auth/teste/`.
 
 Na demonstração local, use:
 
