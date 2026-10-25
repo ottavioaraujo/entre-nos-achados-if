@@ -326,6 +326,22 @@ html[data-theme="suap"] .item-detail-facts{border-color:#d9d9d9}
 }
 @media(prefers-reduced-motion:reduce){html.landing-scroll{scroll-behavior:auto;scroll-snap-type:none}.landing-hero .hero-campus-photo,.landing-hero .hero-copy,.scroll-cue-icon{animation:none}}
 
+/* Mobile usability fixes: keep controls readable and the public board uncluttered. */
+@media(max-width:760px){
+  .board-page .header-actions [data-open-item-modal]{display:none}
+  .board-page .header-actions .button{white-space:nowrap}
+  .board-page .nav{height:46px;gap:20px}
+  .board-page .nav a,.board-page .nav-action{min-height:44px;display:inline-flex;align-items:center;font-size:11px}
+  .board-page .header-actions .button,.board-page .theme-picker select{min-height:40px}
+  .board-page .filters .search,.board-page .filters .select{height:46px;font-size:16px}
+  .board-page .filters .filter-button,.board-page .tabs .filter-button{min-height:42px;font-size:10px}
+  .board-page .tabs .filter-button{flex:1}
+  .board-page .listing-footer .button{min-height:44px;font-size:9px}
+  .field input,.field select,.field textarea,.comment-form input,.comment-form textarea{font-size:16px}
+  .modal-backdrop{padding:8px}
+  .modal{max-height:calc(100dvh - 16px);overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+}
+
 /* Comments stay inside each notice and remain collapsed until requested. */
 .item-comments{margin-top:15px;border-top:1px solid var(--line);padding-top:10px}
 .item-comments summary{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;list-style:none;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
