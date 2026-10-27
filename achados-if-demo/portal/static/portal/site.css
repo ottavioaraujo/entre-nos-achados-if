@@ -268,6 +268,11 @@ html[data-theme="suap"] .landing-body .landing-final{background:#e6e6e6}
 }
 @media(prefers-reduced-motion:reduce){html.landing-scroll{scroll-behavior:auto;scroll-snap-type:none}.landing-hero .hero-campus-photo,.landing-hero .hero-copy,.scroll-cue-icon{animation:none}}
 
+@media(max-width:760px){
+  .comment-form input,.comment-form textarea{font-size:16px}
+  .comment-form .small-action{min-height:42px;padding:0 14px}
+}
+
 /* Mobile usability fixes: keep controls readable and the public board uncluttered. */
 @media(max-width:760px){
   .board-page .header-actions [data-open-item-modal]{display:none}
