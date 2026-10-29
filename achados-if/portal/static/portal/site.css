@@ -403,3 +403,8 @@ html[data-theme="suap"] .landing-body .landing-how .step{border:1px solid rgba(2
 html[data-theme="suap"] .modal{border-radius:20px}
 html[data-theme="suap"] .status{border-radius:999px}
 @media(max-width:760px){html[data-theme="suap"] .landing-body .story-inner{padding:22px}html[data-theme="suap"] .landing-body .landing-how .step{padding:17px}}
+
+@media(max-width:760px){
+  .comment-form input,.comment-form textarea{font-size:16px}
+  .comment-form .small-action{min-height:42px;padding:0 14px}
+}
