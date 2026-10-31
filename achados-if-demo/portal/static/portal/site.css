@@ -273,6 +273,21 @@ html[data-theme="suap"] .landing-body .landing-final{background:#e6e6e6}
   .comment-form .small-action{min-height:42px;padding:0 14px}
 }
 
+/* Keep the full-screen campus photo and its overlay above the themed surface. */
+html[data-theme="suap"] .landing-body .landing-hero{background:#27332d}
+html[data-theme="suap"] .landing-body .landing-hero .hero-campus-photo{z-index:0}
+html[data-theme="suap"] .landing-body .landing-hero .hero-photo-shade{z-index:1}
+html[data-theme="suap"] .landing-body .landing-hero .hero-copy,
+html[data-theme="suap"] .landing-body .landing-hero .scroll-cue{z-index:2}
+html[data-theme="suap"] .landing-body .header{background:rgba(18,23,20,.42);border:0;box-shadow:none;color:#fff}
+html[data-theme="suap"] .landing-body .header .logo,
+html[data-theme="suap"] .landing-body .header .logo small,
+html[data-theme="suap"] .landing-body .header .campus-label,
+html[data-theme="suap"] .landing-body .header .nav a,
+html[data-theme="suap"] .landing-body .header .nav-action{color:rgba(255,255,255,.9)}
+html[data-theme="suap"] .landing-body .header .nav{background:transparent;border-color:rgba(255,255,255,.2)}
+html[data-theme="suap"] .landing-body .header .button.outline{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.66);color:#fff}
+
 /* Mobile usability fixes: keep controls readable and the public board uncluttered. */
 @media(max-width:760px){
   .board-page .header-actions [data-open-item-modal]{display:none}
