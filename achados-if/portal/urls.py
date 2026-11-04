@@ -7,6 +7,7 @@ urlpatterns = [
     path("robots.txt", views.robots_txt, name="robots_txt"),
     path("sitemap.xml", views.sitemap_xml, name="sitemap_xml"),
     path("llms.txt", views.llms_txt, name="llms_txt"),
+    path("googlefe3c6ee95d5a2d2e.html", views.google_site_verification, name="google_site_verification"),
     path("", views.index, name="index"),
     path("mural/", views.board, name="board"),
     path("itens/<int:pk>/", views.item_detail, name="item_detail"),
