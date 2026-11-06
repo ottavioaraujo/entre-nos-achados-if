@@ -64,6 +64,10 @@ def llms_txt(request):
     return _seo_resource("llms.txt", "text/plain")
 
 
+def google_site_verification(request):
+    return _seo_resource("googlefe3c6ee95d5a2d2e.html", "text/html")
+
+
 def index(request):
     """Public landing page; browsing and item submission live on the board."""
     totals = CampusItem.objects.filter(is_resolved=False).aggregate(
