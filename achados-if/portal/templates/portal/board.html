@@ -15,10 +15,13 @@
   <meta property="og:description" content="Consulte itens perdidos e encontrados no campus do IFRN e publique um aviso para ajudar a comunidade.">
   <meta property="og:url" content="https://entre-nos-achados-if.vercel.app/mural/">
   <meta property="og:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/campus-principal.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="Comunidade do IFRN reunida no campus">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Mural de achados e perdidos do IFRN | Entre Nós">
   <meta name="twitter:description" content="Consulte itens perdidos e encontrados no campus do IFRN.">
   <meta name="twitter:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/campus-principal.jpg">
+  <meta name="twitter:image:alt" content="Comunidade do IFRN reunida no campus">
   <script type="application/ld+json">
     {"@context":"https://schema.org","@type":"CollectionPage","name":"Mural de achados e perdidos do IFRN","url":"https://entre-nos-achados-if.vercel.app/mural/","inLanguage":"pt-BR","isPartOf":{"@type":"WebSite","name":"Entre Nós","url":"https://entre-nos-achados-if.vercel.app/"}}
   </script>
@@ -47,8 +50,8 @@
         {% for item in items %}
           <article class="listing" id="item-{{ item.pk }}">
             <a class="listing-photo listing-detail-link" href="{% url 'portal:item_detail' item.pk %}" aria-label="Ver anúncio de {{ item.name }}">
-              {% if item.photo_data %}<img src="{% url 'portal:item_photo' item.pk %}" alt="Foto de {{ item.name }}" loading="lazy" decoding="async">
-              {% elif item.photo %}<img src="{{ item.photo.url }}" alt="Foto de {{ item.name }}" loading="lazy" decoding="async">
+              {% if item.photo_data %}<img src="{% url 'portal:item_photo' item.pk %}" alt="Foto do item {{ item.name }} — {{ item.get_category_display }}" loading="lazy" decoding="async">
+              {% elif item.photo %}<img src="{{ item.photo.url }}" alt="Foto do item {{ item.name }} — {{ item.get_category_display }}" loading="lazy" decoding="async">
               {% else %}<div class="placeholder" aria-hidden="true">{% if item.category == 'eletronicos' %}🎧{% elif item.category == 'chaves_documentos' %}🔑{% elif item.category == 'material_escolar' %}✏️{% elif item.category == 'roupas_acessorios' %}🧥{% else %}🎒{% endif %}</div>{% endif %}
               <span class="status {{ item.kind }}">{{ item.get_kind_display }}</span>
             </a>
