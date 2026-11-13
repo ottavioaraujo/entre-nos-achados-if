@@ -7,14 +7,16 @@
   <title>{{ item.name }} · Achados do campus | Entre Nós</title>
   <meta name="description" content="Aviso de item {{ item.get_kind_display|lower }} no campus: {{ item.name }}. Veja a foto, os detalhes e os comentários da comunidade.">
   <meta name="robots" content="index,follow,max-image-preview:large">
-  {% url 'portal:item_detail' item.pk as item_path %}
-  <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ item_path }}">
+  <link rel="canonical" href="{{ canonical_url }}">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="Entre Nós">
   <meta property="og:title" content="{{ item.name }} · Entre Nós">
-  <meta property="og:description" content="{{ item.description }} · {{ item.location }}">
-  <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ item_path }}">
-  {% if item.photo_data or item.photo %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% url 'portal:item_photo' item.pk %}">{% endif %}
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:description" content="Aviso de item {{ item.get_kind_display|lower }} no campus: {{ item.name }}. {{ item.get_category_display }}, próximo a {{ item.location }}.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ item.name }} · Achados do campus | Entre Nós">
+  <meta name="twitter:description" content="Aviso de item {{ item.get_kind_display|lower }} no campus: {{ item.name }}. Veja detalhes e comentários.">
+  {% if item_image_url %}<meta property="og:image" content="{{ item_image_url }}"><meta property="og:image:alt" content="Foto do item {{ item.name }}"><meta name="twitter:image" content="{{ item_image_url }}">{% else %}<meta property="og:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/campus-principal.jpg"><meta name="twitter:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/campus-principal.jpg">{% endif %}
   {% include 'portal/_font_assets.html' %}
   {% include 'portal/_theme_init.html' %}
   <link rel="stylesheet" href="{% static 'portal/site.css' %}">
