@@ -57,7 +57,27 @@ def robots_txt(request):
 
 
 def sitemap_xml(request):
-    return _seo_resource("sitemap.xml", "application/xml")
+    public_base = settings.PUBLIC_SITE_URL.rstrip("/")
+    public_items = CampusItem.objects.filter(is_resolved=False).only("pk").order_by("pk")
+    urls = [
+        (f"{public_base}/", "weekly", "1.0"),
+        (f"{public_base}/mural/", "daily", "0.8"),
+    ]
+    urls.extend(
+        (f"{public_base}{reverse('portal:item_detail', args=[item.pk])}", "weekly", "0.6")
+        for item in public_items
+    )
+    entries = []
+    for loc, frequency, priority in urls:
+        entries.append(
+            f"<url><loc>{loc}</loc><changefreq>{frequency}</changefreq>"
+            f"<priority>{priority}</priority></url>"
+        )
+    xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+    xml += "".join(entries) + "</urlset>"
+    response = HttpResponse(xml, content_type="application/xml; charset=utf-8")
+    response["Cache-Control"] = "public, max-age=300"
+    return response
 
 
 def llms_txt(request):
@@ -133,7 +153,11 @@ def item_detail(request, pk):
         pk=pk,
     )
     item.comment_form = CampusItemCommentForm(prefix=f"item-{item.pk}")
-    return render(request, "portal/item_detail.html", {"item": item})
+    return render(request, "portal/item_detail.html", {
+        "item": item,
+        "canonical_url": f"{settings.PUBLIC_SITE_URL}{reverse('portal:item_detail', args=[item.pk])}",
+        "item_image_url": f"{settings.PUBLIC_SITE_URL}{reverse('portal:item_photo', args=[item.pk])}" if item.photo_data or item.photo else "",
+    })
 
 
 @require_POST
