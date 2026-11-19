@@ -17,6 +17,9 @@
   <meta name="twitter:title" content="{{ item.name }} · Achados do campus | Entre Nós">
   <meta name="twitter:description" content="Aviso de item {{ item.get_kind_display|lower }} no campus: {{ item.name }}. Veja detalhes e comentários.">
   {% if item_image_url %}<meta property="og:image" content="{{ item_image_url }}"><meta property="og:image:alt" content="Foto do item {{ item.name }}"><meta name="twitter:image" content="{{ item_image_url }}">{% else %}<meta property="og:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/campus-principal.jpg"><meta name="twitter:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/campus-principal.jpg">{% endif %}
+  <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Início","item":"https://entre-nos-achados-if.vercel.app/"},{"@type":"ListItem","position":2,"name":"Mural de achados e perdidos do IFRN","item":"https://entre-nos-achados-if.vercel.app/mural/"},{"@type":"ListItem","position":3,"name":"{{ item.name|escapejs }}","item":"{{ canonical_url }}"}]}
+  </script>
   {% include 'portal/_font_assets.html' %}
   {% include 'portal/_theme_init.html' %}
   <link rel="stylesheet" href="{% static 'portal/site.css' %}">
