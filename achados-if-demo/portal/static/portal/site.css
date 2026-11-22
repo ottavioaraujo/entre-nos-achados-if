@@ -268,6 +268,12 @@ html[data-theme="suap"] .landing-body .landing-final{background:#e6e6e6}
 }
 @media(prefers-reduced-motion:reduce){html.landing-scroll{scroll-behavior:auto;scroll-snap-type:none}.landing-hero .hero-campus-photo,.landing-hero .hero-copy,.scroll-cue-icon{animation:none}}
 
+html[data-theme="suap"] .landing-body .button{font-family:"Open Sans",Arial,sans-serif;font-size:14px;font-weight:600;letter-spacing:.035em}
+html[data-theme="suap"] .landing-body .landing-hero .button{min-height:54px;padding-inline:22px}
+html[data-theme="suap"] .landing-body .scroll-cue,
+html[data-theme="suap"] .landing-body .chapter-next{display:none}
+@media(max-width:760px){html[data-theme="suap"] .landing-body .landing-hero .button{font-size:14px;min-height:50px}}
+
 @media(max-width:760px){
   .comment-form input,.comment-form textarea{font-size:16px}
   .comment-form .small-action{min-height:42px;padding:0 14px}

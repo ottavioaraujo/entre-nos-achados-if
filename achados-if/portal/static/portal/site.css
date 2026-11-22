@@ -423,6 +423,11 @@ html[data-theme="suap"] .landing-body .header .nav a,
 html[data-theme="suap"] .landing-body .header .nav-action{color:rgba(255,255,255,.9)}
 html[data-theme="suap"] .landing-body .header .nav{background:transparent;border-color:rgba(255,255,255,.2)}
 html[data-theme="suap"] .landing-body .header .button.outline{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.66);color:#fff}
+html[data-theme="suap"] .landing-body .button{font-family:"Open Sans",Arial,sans-serif;font-size:14px;font-weight:600;letter-spacing:.035em}
+html[data-theme="suap"] .landing-body .landing-hero .button{min-height:54px;padding-inline:22px}
+html[data-theme="suap"] .landing-body .scroll-cue,
+html[data-theme="suap"] .landing-body .chapter-next{display:none}
+@media(max-width:760px){html[data-theme="suap"] .landing-body .landing-hero .button{font-size:14px;min-height:50px}}
 
 .seo-faq{padding:clamp(42px,7vw,78px) 0;background:#fff;border-top:1px solid var(--line)}
 .seo-faq h2{max-width:720px;margin:10px 0 24px;font:600 clamp(27px,4vw,38px)/1.15 var(--sans);letter-spacing:-.03em}
