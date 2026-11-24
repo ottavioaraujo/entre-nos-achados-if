@@ -27,6 +27,7 @@
     {"@context":"https://schema.org","@type":"WebSite","name":"Entre Nós","url":"https://entre-nos-achados-if.vercel.app/","inLanguage":"pt-BR","description":"Plataforma comunitária de achados e perdidos do campus do IFRN.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://entre-nos-achados-if.vercel.app/mural/?q={search_term_string}"},"query-input":"required name=search_term_string"}}
   </script>
   <link rel="preload" as="image" href="{% static 'portal/demo-items/hero-devolucao-bone.jpg' %}" fetchpriority="high">
+  <link rel="preload" as="image" href="{% static 'portal/demo-items/hero-devolucao-bone-mobile.jpg' %}" media="(max-width: 760px)" fetchpriority="high">
   {% include 'portal/_font_assets.html' %}
   {% include 'portal/_theme_init.html' %}
   <link rel="stylesheet" href="{% static 'portal/site.css' %}">
@@ -49,7 +50,7 @@
   </header>
   <main>
     <section class="landing-hero" id="inicio" aria-labelledby="hero-title" data-landing-step>
-      <img class="hero-campus-photo" src="{% static 'portal/demo-items/hero-devolucao-bone.jpg' %}" alt="Estudantes do IFRN devolvendo um boné encontrado no campus" width="1600" height="900" decoding="async" fetchpriority="high">
+      <picture class="hero-campus-picture"><source media="(max-width: 760px)" srcset="{% static 'portal/demo-items/hero-devolucao-bone-mobile.jpg' %}"><img class="hero-campus-photo" src="{% static 'portal/demo-items/hero-devolucao-bone.jpg' %}" alt="Estudantes do IFRN devolvendo um boné encontrado no campus" width="1600" height="900" decoding="async" fetchpriority="high"></picture>
       <div class="hero-photo-shade" aria-hidden="true"></div>
       <div class="hero-copy">
         <span class="eyebrow">Achados e perdidos do IFRN</span>
