@@ -14,7 +14,7 @@
   <meta property="og:title" content="Achados e perdidos do IFRN | Entre Nós">
   <meta property="og:description" content="Encontre objetos perdidos no campus do IFRN ou publique um aviso de item perdido ou encontrado.">
   <meta property="og:url" content="https://entre-nos-achados-if.vercel.app/">
-  <meta property="og:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/campus-principal.jpg">
+  <meta property="og:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/hero-devolucao-bone.jpg">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1600">
   <meta property="og:image:height" content="900">
@@ -22,11 +22,11 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Achados e perdidos do IFRN | Entre Nós">
   <meta name="twitter:description" content="Encontre objetos perdidos no campus do IFRN ou publique um aviso.">
-  <meta name="twitter:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/campus-principal.jpg">
+  <meta name="twitter:image" content="https://entre-nos-achados-if.vercel.app/static/portal/demo-items/hero-devolucao-bone.jpg">
   <script type="application/ld+json">
     {"@context":"https://schema.org","@type":"WebSite","name":"Entre Nós","url":"https://entre-nos-achados-if.vercel.app/","inLanguage":"pt-BR","description":"Plataforma comunitária de achados e perdidos do campus do IFRN.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://entre-nos-achados-if.vercel.app/mural/?q={search_term_string}"},"query-input":"required name=search_term_string"}}
   </script>
-  <link rel="preload" as="image" href="{% static 'portal/demo-items/campus-principal.jpg' %}" fetchpriority="high">
+  <link rel="preload" as="image" href="{% static 'portal/demo-items/hero-devolucao-bone.jpg' %}" fetchpriority="high">
   {% include 'portal/_font_assets.html' %}
   {% include 'portal/_theme_init.html' %}
   <link rel="stylesheet" href="{% static 'portal/site.css' %}">
@@ -49,11 +49,11 @@
   </header>
   <main>
     <section class="landing-hero" id="inicio" aria-labelledby="hero-title" data-landing-step>
-      <img class="hero-campus-photo" src="{% static 'portal/demo-items/campus-principal.jpg' %}" alt="Estudantes do IFRN mostrando um item encontrado na sala de aula" width="1600" height="900" decoding="async" fetchpriority="high">
+      <img class="hero-campus-photo" src="{% static 'portal/demo-items/hero-devolucao-bone.jpg' %}" alt="Estudantes do IFRN devolvendo um boné encontrado no campus" width="1600" height="900" decoding="async" fetchpriority="high">
       <div class="hero-photo-shade" aria-hidden="true"></div>
       <div class="hero-copy">
         <span class="eyebrow">Achados e perdidos do IFRN</span>
-        <h1 id="hero-title">O que se perde<br>pode <em>voltar para casa.</em></h1>
+        <h1 id="hero-title">Perdeu ou encontrou?<br><em>O campus ajuda.</em></h1>
         <p>Achados e perdidos feitos por quem vive o campus. Encontre um aviso ou publique o seu em poucos minutos.</p>
         <div class="hero-actions"><a class="button hero-primary" href="{% url 'portal:board' %}">Explorar os itens</a><button class="button hero-register" type="button" data-open-item-modal data-kind="lost">Publicar um aviso</button></div>
         {% if messages %}<div class="messages landing-messages">{% for message in messages %}<p>{{ message }}</p>{% endfor %}</div>{% endif %}

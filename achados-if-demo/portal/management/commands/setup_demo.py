@@ -30,7 +30,6 @@ class Command(BaseCommand):
             user.save()
 
         photo_names = (
-            "roupa-bege.jpg",
             "boneco-de-pano.jpg",
             "anel-prateado.jpg",
             "garrafa-lilas.jpg",
@@ -56,9 +55,6 @@ class Command(BaseCommand):
              "garrafa-lilas.jpg", "Garrafa térmica"),
             (CampusItem.Kind.LOST, "Fone de ouvido", CampusItem.Category.ELECTRONICS,
              4, "Laboratório de informática", "Fone sem fio em estojo escuro.", None, None),
-            (CampusItem.Kind.FOUND, "Peça de roupa bege", CampusItem.Category.CLOTHING,
-             5, "Sala de aula", "Peça de roupa bege fotografada na sala. O detalhe exato deve ser confirmado com quem perdeu.",
-             "roupa-bege.jpg", "Casaco cinza"),
             (CampusItem.Kind.LOST, "Caderno de capa preta", CampusItem.Category.SCHOOL,
              6, "Bloco de aulas", "Caderno universitário com anotações de matemática.", None, None),
         ]

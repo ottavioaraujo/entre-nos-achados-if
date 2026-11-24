@@ -2,6 +2,10 @@
 try {
   if (localStorage.getItem("entre-nos-theme") === "suap") {
     document.documentElement.dataset.theme = "suap";
+    const font = document.createElement("link");
+    font.rel = "stylesheet";
+    font.href = "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap";
+    document.head.append(font);
   }
 } catch (_error) {}
 </script>

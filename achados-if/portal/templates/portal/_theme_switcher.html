@@ -1,8 +1,5 @@
-<label class="theme-picker"><span>Tema</span><select id="siteThemeChoice" aria-label="Escolher tema visual"><option value="suap">SUAP</option><option value="current">Atual</option></select></label>
 <script>
 (() => {
-  const picker = document.getElementById("siteThemeChoice");
-  if (!picker) return;
   let savedTheme = "suap";
   try { savedTheme = localStorage.getItem("entre-nos-theme") || "suap"; } catch (_error) {}
   const ensureSuapFont = () => {
@@ -20,12 +17,10 @@
       ensureSuapFont();
     }
     else delete document.documentElement.dataset.theme;
-    picker.value = selected;
     if (save) {
       try { localStorage.setItem("entre-nos-theme", selected); } catch (_error) {}
     }
   };
   applyTheme(savedTheme);
-  picker.addEventListener("change", () => applyTheme(picker.value, true));
 })();
 </script>
